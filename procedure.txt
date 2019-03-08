@@ -1,0 +1,14 @@
+This is a client node, which is used to create mapreduce master and worker VMs, compile MapReduce framework, 
+distribute MapReduce framework binaries and Map/Reduce python application code to masters.
+
+The client node has a fixed private ip address: 10.0.0.30, it is also the zookeeper server that master and work nodes will use.
+
+1.One time Configuration.
+1). generate ssh key pairs.
+2). configure as zookeeper standalone server. Run 
+sudo ./config_zookeeper.sh
+3). install az cli. Run 
+./install_az_cli.sh
+
+2. Pre MapReducer Configuration.
+
