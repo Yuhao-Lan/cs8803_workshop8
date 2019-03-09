@@ -11,4 +11,4 @@ sudo ./config_zookeeper.sh
 ./install_az_cli.sh
 
 2. Pre MapReducer Configuration.
-
+modify

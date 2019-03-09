@@ -2,6 +2,7 @@ import subprocess
 from user_parameters import *
 
 subprocess_list = []
+mapreduce_node_hostnames = []
 
 for counter in range(1, number_node + 1):
     print("Creating VM: " + "map-reduce-node-" + str(counter))
@@ -16,9 +17,15 @@ for counter in range(1, number_node + 1):
         "--location", location,
         "--private-ip-address", private_ip_prefix + str(counter + node_IP_start - 1)
         ]))
+    mapreduce_node_hostnames.append("map-reduce-node-" + str(counter))
 
 ######
 print("Waiting for new VM running...")
 for p in subprocess_list:
     p.wait()
 print("Now " + str(number_node) + " VM instance(s) is running!")
+
+
+
+# distribute code
+# ssh -o "StrictHostKeyChecking no" user@host

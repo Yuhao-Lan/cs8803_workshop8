@@ -16,3 +16,4 @@ print("Waiting for deleting VM...")
 for p in subprocess_list:
     p.wait()
 print("Now " + str(number_node) + " VM instance(s) has been released!")
+
