@@ -4,7 +4,7 @@
 
 #include <grpc++/grpc++.h>
 
-#include "rpc_generated/hello.grpc.pb.h"
+#include "rpc_generated/master-worker.grpc.pb.h"
 
 using grpc::Channel;
 using grpc::ClientContext;
