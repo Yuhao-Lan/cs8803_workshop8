@@ -30,7 +30,7 @@ class WorkerServiceImpl final : public Worker::Service {
 };
 
 void RunServer() {
-  std::string server_address("0:0:0:0:50051");
+  std::string server_address("0.0.0.0:50051");
   WorkerServiceImpl service;
 
   ServerBuilder builder;
