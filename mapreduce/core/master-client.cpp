@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
   // are created. This channel models a connection to an endpoint (in this case,
   // localhost at port 50051). We indicate that the channel isn't authenticated
   // (use of InsecureChannelCredentials()).
-  MasterClient cli(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
+  MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));
   std::string input_filename("world.txt");
   std::string output_filename = cli.StartMapper(input_filename);
   std::cout << "Worker received: " << output_filename << std::endl;
