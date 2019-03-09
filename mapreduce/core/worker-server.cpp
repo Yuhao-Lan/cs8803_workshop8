@@ -21,6 +21,9 @@ class WorkerServiceImpl final : public Worker::Service {
   Status StartMapper(ServerContext* context, 
     const Filename* request, Filename* response) override {
         LOG(INFO) << "A mapper is running with input file: " <<  request->filename();
+        //download 
+        //exec 
+        //upload
         response->set_filename("Hello " + request->filename());
         LOG(INFO) << "The mapper is done with output file: ";
         return Status::OK;

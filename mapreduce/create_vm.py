@@ -25,7 +25,10 @@ for p in subprocess_list:
     p.wait()
 print("Now " + str(number_node) + " VM instance(s) is running!")
 
+# compile MapReduce framework to binaries
 
 
+# divides nodes into master group and worker groups
+# ssh nan@master ./startmaster -input 
 # distribute code
 # ssh -o "StrictHostKeyChecking no" user@host

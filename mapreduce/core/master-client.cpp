@@ -49,10 +49,11 @@ class MasterClient {
 };
 
 int main(int argc, char** argv) {
-  // Instantiate the client. It requires a channel, out of which the actual RPCs
-  // are created. This channel models a connection to an endpoint (in this case,
-  // localhost at port 50051). We indicate that the channel isn't authenticated
-  // (use of InsecureChannelCredentials()).
+    // upload input file to blob
+    // split input file into N chunks
+    // create M clients, where M is the number of worker nodes
+    // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
+    // wait all N pthreds to finish, and start reducers
   MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));
   std::string input_filename("world.txt");
   std::string output_filename = cli.StartMapper(input_filename);
