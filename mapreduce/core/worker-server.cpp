@@ -31,6 +31,10 @@ class WorkerServiceImpl final : public Worker::Service {
   Status StartReducer(ServerContext* context, 
     const Filenames* request, Filename* response) override {
         LOG(INFO) << "A reducer is running with input files: " <<  request->filenames();
+        // download all the mappers' output files
+        // exec sort, [partition]
+        // exec("cat filename | python reduce.py > output.txt");
+        // upload(output.txt);
         response->set_filename("Hello " + request->filenames());
         LOG(INFO) << "The reducer is done with output file: ";
         return Status::OK;
