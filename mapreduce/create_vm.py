@@ -4,7 +4,7 @@ from user_parameters import *
 subprocess_list = []
 
 for counter in range(1, number_node + 1):
-    print("Deleting VM: " + "map-reduce-node-" + str(counter))
+    print("Creating VM: " + "map-reduce-node-" + str(counter))
     subprocess_list.append(subprocess.Popen(["az", 
         "vm", "create", 
         "--resource-group", resource_group_name,
