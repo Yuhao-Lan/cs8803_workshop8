@@ -10,9 +10,9 @@ using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::Status;
-using masterworker::HelloRequest;
-using masterworker::HelloReply;
-using masterworker::Greeter;
+using masterworker::Filenames;
+using masterworker::Filename;
+using masterworker::Worker;
 
 // Logic and data behind the server's behavior.
 class WorkerServiceImpl final : public Worker::Service {
