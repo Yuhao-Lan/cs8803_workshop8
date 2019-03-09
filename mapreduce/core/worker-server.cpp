@@ -1,9 +1,10 @@
 #include <iostream>
 #include <memory>
 #include <string>
-
 #include <grpc++/grpc++.h>
-
+#include <string>
+#include <glog/logging.h>
+#include <glog/raw_logging.h>
 #include "rpc_generated/master-worker.grpc.pb.h"
 
 using grpc::Server;
@@ -19,12 +20,16 @@ class WorkerServiceImpl final : public Worker::Service {
 
   Status StartMapper(ServerContext* context, 
     const Filename* request, Filename* response) override {
+        LOG(INFO) << "A mapper is running with input file: " <<  request->filename();
         response->set_filename("Hello " + request->filename());
+        LOG(INFO) << "The mapper is done with output file: ";
         return Status::OK;
   }
   Status StartReducer(ServerContext* context, 
     const Filenames* request, Filename* response) override {
+        LOG(INFO) << "A reducer is running with input files: " <<  request->filenames();
         response->set_filename("Hello " + request->filenames());
+        LOG(INFO) << "The reducer is done with output file: ";
         return Status::OK;
   }
 };

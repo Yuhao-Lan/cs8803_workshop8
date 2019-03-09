@@ -15,7 +15,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
 #find_package(Check REQUIRED)
 #find_package(Conservator REQUIRED)
 find_package(Protobuf REQUIRED)
-
+find_package(glog REQUIRED)
 
 include_directories(${CHECK_INCLUDE_DIRS})
 #include_directories(${ZOOKEEPER_INCLUDE_DIR}/zookeeper)
@@ -30,4 +30,7 @@ file(GLOB MY_SERVER_SRC worker-server.cpp "rpc_generated/*.cc")
 file(GLOB MY_CLIENT_SRC master-client.cpp "rpc_generated/*.cc")
 add_executable(workerserver ${MY_SERVER_SRC})
 add_executable(masterclient ${MY_CLIENT_SRC})
+target_link_libraries(workerserver glog::glog)
+target_link_libraries(masterclient glog::glog)
+
 #target_link_libraries(master ${ZOOKEEPER_LIBRARIES} ${CONSERVATOR_LIBRARIES})

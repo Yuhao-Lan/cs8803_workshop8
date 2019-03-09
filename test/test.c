@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-#include <glog/logging.h>   // glog 头文件
+#include <glog/logging.h>
 #include <glog/raw_logging.h>
 
 int main(int argc, char** argv){
