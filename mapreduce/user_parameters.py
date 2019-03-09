@@ -1,5 +1,5 @@
 
-number_node = 3
+number_node = 5
 node_IP_start = 10 # e.g. 10.0.0.10
 resource_group_name = "nqin8-resource-group"
 image_name = "nqin8-workshop8-image"
