@@ -68,7 +68,6 @@ int main(int argc, char** argv) {
 
   
   create_client_handles(&vct);
-  num_chunk = 1;
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
   thread * mapper_thread = new thread[num_chunk];
   for(int i = 0; i < num_chunk; i++){
