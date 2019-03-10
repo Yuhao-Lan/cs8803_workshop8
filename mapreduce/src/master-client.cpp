@@ -35,8 +35,13 @@ int main(int argc, char** argv) {
   //create_client_handles(workers, &client_handles, &number_workers);
   vector<WorkerStruct> vct;
   create_client_handles(&vct);
-
+  WorkerStruct temp = vct[0];
+  LOG(INFO) << "StartMapper: " << blob_filename << ".1"; 
+  temp.handle->StartMapper(blob_filename + ".1");
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
+  /*for(int i = 0; i < num_chunk; i++){
+
+  }*/
   // wait all N pthreds to finish, and start reducers
   
   //MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));

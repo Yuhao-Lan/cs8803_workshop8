@@ -33,7 +33,7 @@ for master_hostname in masters:
     master_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + master_hostname, 
         dest + "/" + master_binary_name , 
         dest + "/" + input_file_name, # input files
-        workers_hostname__            # worker hostnames
+        # workers_hostname__            # worker hostnames
         ]))
     break # start only one master
 for p in master_tasks:

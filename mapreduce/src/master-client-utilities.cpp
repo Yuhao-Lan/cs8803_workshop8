@@ -8,8 +8,14 @@ using grpc::Status;
 using namespace std;
 int create_client_handles(vector<WorkerStruct> * vct){
     // right now, it is hard code. But later on, it will use zookeeper.
-    WorkerStruct wk1; // , wk2, wk3;
+    WorkerStruct wk1, wk2, wk3;
     wk1.hostname = "map-reduce-node-3";
     wk1.handle = new MasterClient(grpc::CreateChannel("map-reduce-node-3:50051", grpc::InsecureChannelCredentials()));
+    wk2.hostname = "map-reduce-node-4";
+    wk2.handle = new MasterClient(grpc::CreateChannel("map-reduce-node-4:50051", grpc::InsecureChannelCredentials()));
+    wk3.hostname = "map-reduce-node-5";
+    wk4.handle = new MasterClient(grpc::CreateChannel("map-reduce-node-5:50051", grpc::InsecureChannelCredentials()));
     vct->push_back(wk1);
+    vct->push_back(wk2);
+    vct->push_back(wk3);
 }
