@@ -60,12 +60,12 @@ int main(int argc, char** argv) {
   create_client_handles(&vct);
   
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
-  thread * mapper_thread[] = new thread*[num_chunk];
+  thread mapper_thread[] = new thread[num_chunk];
   for(int i = 0; i < num_chunk; i++){
-    mapper_thread[i] = new thread(start_mapper, blob_filename + "." + str(i));
+    mapper_thread[i] = thread(start_mapper, blob_filename + "." + to_string(i));
   }
   for(int i = 0; i < num_chunk; i++){
-    mapper_thread[i]->join();
+    mapper_thread[i].join();
   }
   // wait all N pthreds to finish, and start reducers
   
