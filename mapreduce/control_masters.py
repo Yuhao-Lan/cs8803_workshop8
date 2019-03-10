@@ -30,6 +30,12 @@ for i in range(number_master, number_node):
 print("Uploading input files/binaries to masters")
 master_upload_tasks = []
 for master_hostname in masters:
+    master_upload_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + master_hostname, "rm", "-r", "master"]))
+for p in master_upload_tasks:
+    p.wait()
+
+master_upload_tasks = []
+for master_hostname in masters:
     master_upload_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + master_hostname, "mkdir", "master"]))
 for p in master_upload_tasks:
     p.wait()
@@ -42,7 +48,7 @@ for p in master_upload_tasks:
 
 master_upload_tasks = []
 for master_hostname in masters:
-    master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", input_file, admin_name + "@" + master_hostname + ":~/master"]))
+    master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", master_binaries, admin_name + "@" + master_hostname + ":~/master"]))
 for p in master_upload_tasks:
     p.wait()
 
