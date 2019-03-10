@@ -28,28 +28,34 @@ for i in range(number_master, number_node):
 
 # upload input files/binaries
 print("Uploading input files/binaries to masters")
+tasks = []
+for node in mapreduce_node_hostnames:
+    tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + node, "rm", "-r", dest]))
+for p in tasks:
+    p.wait()
+
+tasks = []
+for node in mapreduce_node_hostnames:
+    tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + node, "mkdir", dest]))
+for p in tasks:
+    p.wait()
+
 master_upload_tasks = []
 for master_hostname in masters:
-    master_upload_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + master_hostname, "rm", "-r", "master"]))
+    master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", input_file, admin_name + "@" + master_hostname + ":" + dest]))
 for p in master_upload_tasks:
     p.wait()
 
 master_upload_tasks = []
 for master_hostname in masters:
-    master_upload_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + master_hostname, "mkdir", "master"]))
+    master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", master_binaries, admin_name + "@" + master_hostname + ":" + dest]))
 for p in master_upload_tasks:
     p.wait()
 
-master_upload_tasks = []
-for master_hostname in masters:
-    master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", input_file, admin_name + "@" + master_hostname + ":~/master"]))
-for p in master_upload_tasks:
-    p.wait()
-
-master_upload_tasks = []
-for master_hostname in masters:
-    master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", master_binaries, admin_name + "@" + master_hostname + ":~/master"]))
-for p in master_upload_tasks:
+worker_upload_tasks = []
+for worker_hostname in workers:
+    worker_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", worker_binaries, admin_name + "@" + worker_hostname + ":" + dest]))
+for p in worker_upload_tasks:
     p.wait()
 
 print("Uploading done")

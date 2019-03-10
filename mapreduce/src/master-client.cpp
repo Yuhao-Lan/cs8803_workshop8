@@ -60,14 +60,14 @@ int main(int argc, char** argv) {
   // split input file into N chunks
   split(str, 1024);
     
-    // create M clients, where M is the number of worker nodes
-    // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
-    // wait all N pthreds to finish, and start reducers
+  // create M clients, where M is the number of worker nodes
+  // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
+  // wait all N pthreds to finish, and start reducers
   
-  MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));
-  std::string input_filename("world.txt");
-  std::string output_filename = cli.StartMapper(input_filename);
-  std::cout << "Worker received: " << output_filename << std::endl;
+  //MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));
+  //std::string input_filename("world.txt");
+  //std::string output_filename = cli.StartMapper(input_filename);
+  //std::cout << "Worker received: " << output_filename << std::endl;
 
   return 0;
 }
