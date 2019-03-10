@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
   upload(str, blob_filename);
   // split input file into N chunks
   LOG(INFO) << "Master is splitting blob file: " << blob_filename;
-  int num_chunk = split(str, 1024);
+  int num_chunk = split(blob_filename, 1024);
   LOG(INFO) << "Master splitted blob file: " << blob_filename << " into " << num_chunk << " chunk";
   // create M clients, where M is the number of worker nodes
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
