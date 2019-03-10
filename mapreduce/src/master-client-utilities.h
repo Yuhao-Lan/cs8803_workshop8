@@ -22,24 +22,14 @@ class MasterClient {
   MasterClient(std::shared_ptr<Channel> channel)
       : stub_(Worker::NewStub(channel)) {}
 
-  // Assambles the client's payload, sends it and presents the response back
-  // from the server.
+  
   std::string StartMapper(const std::string& str_filename) {
-    // Data we are sending to the server.
+  
     Filename filename;
     filename.set_filename(str_filename);
-
-    // Container for the data we expect from the server.
     Filename return_filename;
-
-    // Context for the client. It could be used to convey extra information to
-    // the server and/or tweak certain RPC behaviors.
     ClientContext context;
-
-    // The actual RPC.
     Status status = stub_->StartMapper(&context, filename, &return_filename);
-
-    // Act upon its status.
     if (status.ok()) {
       return return_filename.filename();
     } else {
@@ -47,7 +37,20 @@ class MasterClient {
       return "RPC failed";
     }
   }
-
+  std::string StartReducer(const std::string& str_filenames) {
+  
+    Filenames filenames;
+    filenames.set_filenames(str_filenames);
+    Filename return_filename;
+    ClientContext context;
+    Status status = stub_->StartReducer(&context, filenames, &return_filename);
+    if (status.ok()) {
+      return return_filename.filename();
+    } else {
+      std::cout << status.error_code() << ": " << status.error_message() << std::endl;
+      return "RPC failed";
+    }
+  }
  private:
   std::unique_ptr<Worker::Stub> stub_;
 };

@@ -13,31 +13,64 @@ mutex next_client_mtx;
 //vector<WorkerStruct> vct;
 vector<string> vct;
 mutex vct_mtx;
+string mappers_outputs = "";
+mutex mappers_outputs_mtx;
 void start_mapper(string file_chunk){
-  //
-  int local_client_id = 0;
-  next_client_mtx.lock();
-  local_client_id = next_client;
-  next_client ++;
-  if(next_client >= vct.size()){
-    next_client = 0;
-  }
-  next_client_mtx.unlock();
-  vct_mtx.lock();
-  string worker_hostname = vct[local_client_id];
-  vct_mtx.unlock();
   string output_file = "";
+  string worker_hostname = "";
+  //
   while(1){
+    int local_client_id = 0;
+    next_client_mtx.lock();
+    local_client_id = next_client;
+    next_client ++;
+    if(next_client >= vct.size()){
+      next_client = 0;
+    }
+    next_client_mtx.unlock();
+    vct_mtx.lock();
+    worker_hostname = vct[local_client_id];
+    vct_mtx.unlock();
     MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
-    LOG(INFO) << "StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
+    // LOG(INFO) << "StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
     output_file = cli.StartMapper(file_chunk);
-    if(output_file == "RPC failed"){
-
-    }else{
+    if(output_file != "RPC failed"){
       break;
     }
   }
-  LOG(INFO) << "StartMapper: " << file_chunk << " done with output file: " << output_file; 
+  LOG(INFO) << worker_hostname << ".StartMapper(" << file_chunk << ") => " << output_file; 
+  mappers_outputs_mtx.lock();
+  if(mappers_outputs == ""){
+    mappers_outputs = output_file;
+  }else{
+    mappers_outputs = mappers_outputs + ";" + output_file;
+  }
+  mappers_outputs_mtx.unlock();
+}
+void start_reducer(string filenames){
+  string output_file = "";
+  string worker_hostname = "";
+  //
+  while(1){
+    int local_client_id = 0;
+    next_client_mtx.lock();
+    local_client_id = next_client;
+    next_client ++;
+    if(next_client >= vct.size()){
+      next_client = 0;
+    }
+    next_client_mtx.unlock();
+    vct_mtx.lock();
+    worker_hostname = vct[local_client_id];
+    vct_mtx.unlock();
+    MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
+    // LOG(INFO) << "StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
+    output_file = cli.StartReducer(filenames);
+    if(output_file != "RPC failed"){
+      break;
+    }
+  }
+  LOG(INFO) << worker_hostname << ".StartMapper(" << file_chunk << ") => " << output_file; 
 }
 int main(int argc, char** argv) {
   /*
@@ -73,11 +106,14 @@ int main(int argc, char** argv) {
   for(int i = 0; i < num_chunk; i++){
     mapper_thread[i] = thread(start_mapper, blob_filename + "." + to_string(i));
   }
+  // wait all N pthreds to finish, and start reducers
   for(int i = 0; i < num_chunk; i++){
     mapper_thread[i].join();
   }
+
+  start_reducer(mappers_outputs);
   cout << "All done " << endl;
-  // wait all N pthreds to finish, and start reducers
+  
   
   //MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));
   //std::string input_filename("world.txt");
