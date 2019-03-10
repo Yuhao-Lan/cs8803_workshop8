@@ -55,11 +55,20 @@ int main(int argc, char** argv) {
   }
   // upload input file to blob
   string str(argv[1]);
-  LOG(INFO) << "Master starts input file: " <<  str;
-  upload(str);
+  size_t found = str.find_last_of("/");
+  string blob_filename;
+  if(found == nops) {
+    blob_filename = str;
+  }else{
+    blob_filename = str.substr(found+1);
+  }
+  
+  LOG(INFO) << "Master is uploading input file: " <<  str << " to blob " << blob_filename;
+  upload(str, blob_filename);
   // split input file into N chunks
-  split(str, 1024);
-    
+  LOG(INFO) << "Master is splitting blob file: " << blob_filename;
+  int num_chunk = split(str, 1024);
+  LOG(INFO) << "Master splitted blob file: " << blob_filename << " into " << num_chunk << " chunk";
   // create M clients, where M is the number of worker nodes
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
   // wait all N pthreds to finish, and start reducers

@@ -16,3 +16,6 @@ master_binaries = "./binaries/master"
 worker_binaries = "./binaries/worker"
 
 dest = "~/mapreduce"
+master_binary_name = "master"
+worker_binary_name = "worker"
+input_file_name = "big.txt"

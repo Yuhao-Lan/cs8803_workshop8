@@ -10,7 +10,7 @@ using namespace std;
 
 static string connect_string = "DefaultEndpointsProtocol=https;AccountName=mapreducestorage123;AccountKey=ofq5oXyrljPqpD/0eNOqAI47BhwXEdgDEPPEKJOKI/yK+hi/6Bi79Z5zr/8CXb3qK/9PnPSFVbb9hn9DTt2jhg==;EndpointSuffix=core.windows.net";
 static string container_name = "mapreduce";
-int upload(string filename){
+int upload(string src_filename, dest_filename);{
     // Define the connection-string with your values.
     const utility::string_t storage_connection_string(U(connect_string));
     // Retrieve storage account from connection string.
@@ -20,9 +20,9 @@ int upload(string filename){
     // Retrieve a reference to a container.
     azure::storage::cloud_blob_container container = blob_client.get_container_reference(U(container_name));
     // Retrieve reference to a blob
-    azure::storage::cloud_block_blob blockBlob = container.get_block_blob_reference(U(filename));
+    azure::storage::cloud_block_blob blockBlob = container.get_block_blob_reference(U(dest_filename));
     // Create or overwrite the blob with contents from a local file.
-    concurrency::streams::istream input_stream = concurrency::streams::file_stream<uint8_t>::open_istream(U(filename)).get();
+    concurrency::streams::istream input_stream = concurrency::streams::file_stream<uint8_t>::open_istream(U(src_filename)).get();
     blockBlob.upload_from_stream(input_stream);
     input_stream.close().wait();
     return 0;
