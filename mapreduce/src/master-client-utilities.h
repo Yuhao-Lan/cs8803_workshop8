@@ -52,11 +52,11 @@ class MasterClient {
   std::unique_ptr<Worker::Stub> stub_;
 };
 
-struct Worker{
+struct WorkerStruct{
     string hostname;
     MasterClient * handle;
 };
 
-int create_client_handles(vector<Worker> * vct);
+int create_client_handles(vector<WorkerStruct> * vct);
 
 #endif // MASTER_CLIENT_U__

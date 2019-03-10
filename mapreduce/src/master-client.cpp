@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
   LOG(INFO) << "Master splitted blob file: " << blob_filename << " into " << num_chunk << " chunk";
   // create M clients, where M is the number of worker nodes
   //create_client_handles(workers, &client_handles, &number_workers);
-  vector<Worker> vct;
+  vector<WorkerStruct> vct;
   create_client_handles(&vct);
 
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
