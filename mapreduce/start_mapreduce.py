@@ -25,6 +25,7 @@ for worker in workers:
 master_tasks = []
 for master_hostname in masters:
     master_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + master_hostname, "master/master", ""]))
+    break # start only one master
 for p in master_tasks:
     p.wait()
 
