@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
   string str(argv[1]);
   size_t found = str.find_last_of("/");
   string blob_filename;
-  if(found == string::nops) {
+  if(found == string::npos) {
     blob_filename = str;
   }else{
     blob_filename = str.substr(found+1);
