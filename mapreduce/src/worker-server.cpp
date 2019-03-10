@@ -7,6 +7,8 @@
 #include <glog/raw_logging.h>
 #include "rpc_generated/master-worker.grpc.pb.h"
 #include "my_fs.h"
+#include <sys/types.h> 
+#include <sys/wait.h>
 
 #define HOSTNAME_MAX_LEN 128
 
@@ -17,16 +19,33 @@ using grpc::Status;
 using masterworker::Filenames;
 using masterworker::Filename;
 using masterworker::Worker;
-
+string hostname = "";
 // Logic and data behind the server's behavior.
 class WorkerServiceImpl final : public Worker::Service {
 
   Status StartMapper(ServerContext* context, 
     const Filename* request, Filename* response) override {
-        LOG(INFO) << "A mapper is running with input file: " <<  request->filename();
+        LOG(INFO) << hostname << ".Mapper(" <<  request->filename() << ")";
         //download 
-        //download(request->filename());
-        //exec 
+        string filename = request->filename();
+        download(filename, filename);
+        //exec
+        //cat ../input_files/big.txt | ./mapper.py | sort | ./reducer.py
+        pid_t pid = fork();
+        if(pid == -1)
+        {
+          LOG(WARNING) << hostname << ".Mapper(" <<  request->filename() << ") failed";
+          return Status::FAIL;
+        }
+        else if (pid == 0)
+        {
+          char *const paramList[] = {"5"," 1", NULL};
+          execvp("TestApplication", paramList);
+        }else{
+          int status;
+          waitpid(pid, &status,0);
+        }
+        
         //upload
         response->set_filename("Hello " + request->filename());
         LOG(INFO) << "The mapper is done with output file: ";
@@ -51,7 +70,7 @@ void RunServer() {
       cout << "Error: Cannot get hostname" << endl;
       return;
   }
-  string hostname = string(cstr_hostname);
+  hostname = string(cstr_hostname);
 
   std::string server_address("0.0.0.0:50051");
   WorkerServiceImpl service;
