@@ -49,7 +49,7 @@ void RunServer() {
    char cstr_hostname[HOSTNAME_MAX_LEN];
    if(gethostname(cstr_hostname, HOSTNAME_MAX_LEN) != 0){
       cout << "Error: Cannot get hostname" << endl;
-      return 0;
+      return;
   }
   string hostname = string(cstr_hostname);
 
