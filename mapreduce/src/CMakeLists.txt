@@ -37,7 +37,7 @@ link_directories(/usr/local/lib)
 link_libraries(grpc++_unsecure grpc gpr ${PROTOBUF_LIBRARY})
 
 file(GLOB MY_SERVER_SRC worker-server.cpp my_fs.cpp "rpc_generated/*.cc")
-file(GLOB MY_CLIENT_SRC master-client.cpp my_fs.cpp "rpc_generated/*.cc")
+file(GLOB MY_CLIENT_SRC master-client.cpp master-client-utilities.cpp my_fs.cpp "rpc_generated/*.cc")
 add_executable(worker ${MY_SERVER_SRC})
 add_executable(master ${MY_CLIENT_SRC})
 target_link_libraries(worker glog::glog ${Boost_LIBRARIES} ${SSL_LIBRARIES} ${CASABLANCA_LIBRARY} ${AZURE_STORAGE_LIBRARY})
