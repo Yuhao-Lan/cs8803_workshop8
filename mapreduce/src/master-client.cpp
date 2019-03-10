@@ -70,7 +70,7 @@ void start_reducer(string filenames){
       break;
     }
   }
-  LOG(INFO) << worker_hostname << ".StartMapper(" << file_chunk << ") => " << output_file; 
+  LOG(INFO) << worker_hostname << ".StartReducer(" << filenames << ") => " << output_file; 
 }
 int main(int argc, char** argv) {
   /*
