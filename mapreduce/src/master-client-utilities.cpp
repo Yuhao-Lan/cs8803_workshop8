@@ -18,4 +18,5 @@ int create_client_handles(vector<WorkerStruct> * vct){
     vct->push_back(wk1);
     vct->push_back(wk2);
     vct->push_back(wk3);
+    return 3;
 }
