@@ -91,7 +91,8 @@ int split(string filename, int chunk_size_kb){
     azure::storage::cloud_block_blob split_blob2 = container.get_block_blob_reference(U(filename + "." + to_string(file_counter)));
     split_blob2.upload_from_file(prefix + filename + ".temp");
     // remove the local temp file
-    remove(prefix + filename + ".temp");
+    string last_temp_file = prefix + filename + ".temp"
+    remove(last_temp_file.c_str());
     return file_counter - 1;
 
 }
