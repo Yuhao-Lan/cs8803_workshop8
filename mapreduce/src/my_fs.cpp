@@ -55,13 +55,13 @@ int split(string filename, int chunk_size_kb){
     // Retrieve reference to a blob name.
     azure::storage::cloud_block_blob blockBlob = container.get_block_blob_reference(U(filename)); 
     blockBlob.download_to_file(prefix + filename);
-    cout << "downloaded" << endl;
+    //cout << "downloaded" << endl;
     // split the local file
     azure::storage::cloud_block_blob split_blob;
     ifstream file(prefix + filename);
     ofstream * out = new ofstream(prefix + filename + ".temp");
     string str; 
-    int file_counter = 0;
+    int file_counter = 1;
     int byte_counter = 0;
     int flag = 0;
     while (getline(file, str))
@@ -79,7 +79,7 @@ int split(string filename, int chunk_size_kb){
             flag = 2;
         }else{
             //upload the old one and start a new local file
-            cout << "uploading " << file_counter << endl;
+            //cout << "uploading " << file_counter << endl;
             azure::storage::cloud_block_blob split_blob = container.get_block_blob_reference(U(filename + "." + to_string(file_counter)));
             split_blob.upload_from_file(prefix + filename + ".temp");
             byte_counter = str.length();
@@ -87,7 +87,7 @@ int split(string filename, int chunk_size_kb){
             out = new ofstream(prefix + filename + ".temp");
             *out << str;
             flag = 3;
-            cout << "done uploading " << file_counter << endl;
+            //cout << "done uploading " << file_counter << endl;
         }
 
     }
@@ -95,8 +95,10 @@ int split(string filename, int chunk_size_kb){
     azure::storage::cloud_block_blob split_blob2 = container.get_block_blob_reference(U(filename + "." + to_string(file_counter)));
     split_blob2.upload_from_file(prefix + filename + ".temp");
     // remove the local temp file
-    string last_temp_file = prefix + filename + ".temp";
-    // remove(last_temp_file.c_str());
-    return file_counter - 1;
+    string last_temp_file = prefix + filename;
+    remove(last_temp_file.c_str());
+    last_temp_file = prefix + filename + ".temp";
+    remove(last_temp_file.c_str());
+    return file_counter;
 
 }
