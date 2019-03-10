@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <cstddef>
 #include <grpc++/grpc++.h>
 #include <glog/logging.h>
 #include <glog/raw_logging.h>

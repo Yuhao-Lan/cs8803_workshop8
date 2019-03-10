@@ -10,7 +10,7 @@ using namespace std;
 
 static string connect_string = "DefaultEndpointsProtocol=https;AccountName=mapreducestorage123;AccountKey=ofq5oXyrljPqpD/0eNOqAI47BhwXEdgDEPPEKJOKI/yK+hi/6Bi79Z5zr/8CXb3qK/9PnPSFVbb9hn9DTt2jhg==;EndpointSuffix=core.windows.net";
 static string container_name = "mapreduce";
-int upload(string src_filename, dest_filename);{
+int upload(string src_filename, string dest_filename){
     // Define the connection-string with your values.
     const utility::string_t storage_connection_string(U(connect_string));
     // Retrieve storage account from connection string.
@@ -28,7 +28,7 @@ int upload(string src_filename, dest_filename);{
     return 0;
 }
 
-int download(string filename){
+int download(string src_filename, string dest_filename){
      // Define the connection-string with your values.
     const utility::string_t storage_connection_string(U(connect_string));
     // Retrieve storage account from connection string.
@@ -38,8 +38,8 @@ int download(string filename){
     // Retrieve a reference to a previously created container.
     azure::storage::cloud_blob_container container = blob_client.get_container_reference(U(container_name));
     // Retrieve reference to a blob name.
-    azure::storage::cloud_block_blob blockBlob = container.get_block_blob_reference(U(filename)); 
-    blockBlob.download_to_file(filename);
+    azure::storage::cloud_block_blob blockBlob = container.get_block_blob_reference(U(src_filename)); 
+    blockBlob.download_to_file(dest_filename);
 }
 
 static string prefix = "qoeijnfughregurhgreg.";
