@@ -16,7 +16,7 @@ for i in range(number_master, number_node):
     workers.append(mapreduce_node_hostnames[i])
 
 
-print('\n\n')
+print()
 worker_tasks = []
 for worker_hostname in workers:
     print("Start workers: ", worker_hostname)
@@ -32,7 +32,7 @@ for master_hostname in masters:
     master_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + master_hostname, 
         dest + "/" + master_binary_name , 
         dest + "/" + input_file_name, # input files
-        "+".join(workers)             # worker hostnames
+        ";".join(workers)             # worker hostnames
         ]))
     break # start only one master
 for p in master_tasks:
