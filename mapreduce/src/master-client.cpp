@@ -3,9 +3,32 @@
 #include <grpc++/grpc++.h>
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
+#include <thread>
+#include <mutex>
 #include "master-client-utilities.h"
 #include "my_fs.h"
+using namespace std;
 int next_client = 0;
+mutex next_client_mtx;
+vector<WorkerStruct> vct;
+mutex vct_mtx;
+void start_mapper(string file_chunk){
+  //
+  int local_client_id = 0;
+  next_client_mtx.lock();
+  local_client_id = next_client;
+  next_client ++;
+  if(next_client >= vct.size()){
+    next_client = 0;
+  }
+  next_client_mtx.unlock();
+  vct_mtx.lock();
+  WorkerStruct temp = vct[local_client_id];
+  vct_mtx.unlock();
+  LOG(INFO) << "StartMapper: " << file_chunk << ".1"; 
+  temp.handle->StartMapper(file_chunk + ".1");
+
+}
 int main(int argc, char** argv) {
   /*
   * 0 = program self
@@ -33,15 +56,17 @@ int main(int argc, char** argv) {
   LOG(INFO) << "Master splitted blob file: " << blob_filename << " into " << num_chunk << " chunk";
   // create M clients, where M is the number of worker nodes, ask from zookeeper
 
-  vector<WorkerStruct> vct;
+  
   create_client_handles(&vct);
-  WorkerStruct temp = vct[0];
-  LOG(INFO) << "StartMapper: " << blob_filename << ".1"; 
-  temp.handle->StartMapper(blob_filename + ".1");
+  
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
-  /*for(int i = 0; i < num_chunk; i++){
-
-  }*/
+  thread * mapper_thread[] = new thread*[num_chunk];
+  for(int i = 0; i < num_chunk; i++){
+    thread[i] = new thread(start_mapper, blob_filename + "." + str(i));
+  }
+  for(int i = 0; i < num_chunk; i++){
+    thread[i]->join();
+  }
   // wait all N pthreds to finish, and start reducers
   
   //MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));

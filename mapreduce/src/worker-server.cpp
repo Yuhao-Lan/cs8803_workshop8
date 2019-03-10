@@ -62,6 +62,10 @@ void RunServer() {
 }
 
 int main(int argc, char** argv) {
+  // register with zookeeper
+
+
+  // run server
   RunServer();
   return 0;
 }
