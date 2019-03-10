@@ -27,9 +27,9 @@ void start_mapper(string file_chunk){
   string worker_hostname = vct[local_client_id];
   vct_mtx.unlock();
   MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
-  LOG(INFO) << "StartMapper: " << file_chunk << "Using worker node: " << worker_hostname; 
+  LOG(INFO) << "StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
   cli.StartMapper(file_chunk);
-
+  LOG(INFO) << "StartMapper: " << file_chunk << " done."; 
 }
 int main(int argc, char** argv) {
   /*
