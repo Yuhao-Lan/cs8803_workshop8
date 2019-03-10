@@ -92,7 +92,7 @@ int split(string filename, int chunk_size_kb){
     split_blob2.upload_from_file(prefix + filename + ".temp");
     // remove the local temp file
     string last_temp_file = prefix + filename + ".temp";
-    remove(last_temp_file.c_str());
+    // remove(last_temp_file.c_str());
     return file_counter - 1;
 
 }
