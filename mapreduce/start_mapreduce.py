@@ -32,10 +32,17 @@ for master_hostname in masters:
     master_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + master_hostname, 
         dest + "/" + master_binary_name , 
         dest + "/" + input_file_name, # input files
-        ";".join(workers)             # worker hostnames
+        "#".join(workers)             # worker hostnames
         ]))
     break # start only one master
 for p in master_tasks:
     p.wait()
 
 print("Masters are running....")
+
+
+time.sleep(4)
+
+print("Killing worker...")
+for p in worker_tasks:
+    p.kill()
