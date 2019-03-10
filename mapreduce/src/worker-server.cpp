@@ -9,7 +9,10 @@
 #include "my_fs.h"
 #include <sys/types.h> 
 #include <sys/wait.h>
-
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #define HOSTNAME_MAX_LEN 128
 
 using grpc::Server;
@@ -31,6 +34,10 @@ class WorkerServiceImpl final : public Worker::Service {
         download(filename, filename);
         //exec
         //cat ../input_files/big.txt | ./mapper.py | sort | ./reducer.py
+        string map_output_file = filename + ".map";
+        int out_fd = open(map_output_file.c_str(), O_RDWR|O_CREAT, 0666);
+        int in_fd = open(filename.c_str(), O_RDONLY);
+
         pid_t pid = fork();
         if(pid == -1)
         {
@@ -39,8 +46,10 @@ class WorkerServiceImpl final : public Worker::Service {
         }
         else if (pid == 0)
         {
-          char *const paramList[] = {"5"," 1", NULL};
-          execvp("TestApplication", paramList);
+          dup2(in_fd, 0);
+          dup2(out_fd, 1);
+          char * const cmd[] = {"./mapper.py", nullptr};
+          execvp(loc, cmd);
         }else{
           int status;
           waitpid(pid, &status,0);
@@ -48,7 +57,9 @@ class WorkerServiceImpl final : public Worker::Service {
         
         //upload
         response->set_filename("Hello " + request->filename());
-        LOG(INFO) << "The mapper is done with output file: ";
+        LOG(INFO) << "The mapper is done with output file: " << map_output_file;
+        close(out_fd);
+        close(in_fd);
         return Status::OK;
   }
   Status StartReducer(ServerContext* context, 
