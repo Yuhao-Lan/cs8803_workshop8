@@ -4,7 +4,7 @@
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
 #include "master-client-utilities.h"
-
+#include "my_fs.h"
 int next_client = 0;
 int main(int argc, char** argv) {
   /*
