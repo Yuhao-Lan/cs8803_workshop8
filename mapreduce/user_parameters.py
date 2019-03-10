@@ -19,3 +19,6 @@ dest = "~/mapreduce"
 master_binary_name = "master"
 worker_binary_name = "worker"
 input_file_name = "big.txt"
+
+mapper_code = "./application_code/mapper.py"
+reducer_code = "./application_code/reducer.py"

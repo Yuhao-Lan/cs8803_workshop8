@@ -27,7 +27,7 @@ for i in range(number_master, number_node):
 # ssh -o "StrictHostKeyChecking no" user@host
 
 # upload input files/binaries
-print("Uploading input files/binaries to masters")
+print("Uploading input files/binaries/application code to masters/workers")
 tasks = []
 for node in mapreduce_node_hostnames:
     tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + node, "rm", "-r", dest]))
@@ -40,19 +40,19 @@ for node in mapreduce_node_hostnames:
 for p in tasks:
     p.wait()
 
-master_upload_tasks = []
-for master_hostname in masters:
-    master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", input_file, admin_name + "@" + master_hostname + ":" + dest]))
-for p in master_upload_tasks:
-    p.wait()
+
 
 master_upload_tasks = []
 for master_hostname in masters:
     master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", master_binaries, admin_name + "@" + master_hostname + ":" + dest]))
+    master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", input_file, admin_name + "@" + master_hostname + ":" + dest]))
 
 worker_upload_tasks = []
 for worker_hostname in workers:
     worker_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", worker_binaries, admin_name + "@" + worker_hostname + ":" + dest]))
+    worker_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", mapper_code, admin_name + "@" + worker_hostname + ":" + dest]))
+    worker_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", reducer_code, admin_name + "@" + worker_hostname + ":" + dest]))
+
 
 for p in master_upload_tasks:
     p.wait()
