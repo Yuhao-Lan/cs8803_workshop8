@@ -10,7 +10,8 @@
 using namespace std;
 int next_client = 0;
 mutex next_client_mtx;
-vector<WorkerStruct> vct;
+//vector<WorkerStruct> vct;
+vector<string> vct;
 mutex vct_mtx;
 void start_mapper(string file_chunk){
   //
@@ -23,10 +24,11 @@ void start_mapper(string file_chunk){
   }
   next_client_mtx.unlock();
   vct_mtx.lock();
-  WorkerStruct temp = vct[local_client_id];
+  string worker_hostname = vct[local_client_id];
   vct_mtx.unlock();
-  LOG(INFO) << "StartMapper: " << file_chunk << ".1"; 
-  temp.handle->StartMapper(file_chunk + ".1");
+  MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
+  LOG(INFO) << "StartMapper: " << file_chunk << "Using worker node: " << worker_hostname; 
+  cli.StartMapper(file_chunk);
 
 }
 int main(int argc, char** argv) {

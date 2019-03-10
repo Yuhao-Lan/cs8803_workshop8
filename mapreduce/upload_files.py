@@ -49,12 +49,13 @@ for p in master_upload_tasks:
 master_upload_tasks = []
 for master_hostname in masters:
     master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", master_binaries, admin_name + "@" + master_hostname + ":" + dest]))
-for p in master_upload_tasks:
-    p.wait()
 
 worker_upload_tasks = []
 for worker_hostname in workers:
     worker_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", worker_binaries, admin_name + "@" + worker_hostname + ":" + dest]))
+
+for p in master_upload_tasks:
+    p.wait()
 for p in worker_upload_tasks:
     p.wait()
 
