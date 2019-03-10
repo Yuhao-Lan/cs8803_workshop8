@@ -69,6 +69,7 @@ int main(int argc, char** argv) {
   for(int i = 0; i < num_chunk; i++){
     mapper_thread[i].join();
   }
+  cout << "All done " << endl;
   // wait all N pthreds to finish, and start reducers
   
   //MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));

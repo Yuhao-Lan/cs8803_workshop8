@@ -7,6 +7,9 @@
 #include <glog/raw_logging.h>
 #include "rpc_generated/master-worker.grpc.pb.h"
 #include "my_fs.h"
+
+#define HOSTNAME_MAX_LEN 128
+
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -43,6 +46,13 @@ class WorkerServiceImpl final : public Worker::Service {
 };
 
 void RunServer() {
+   char cstr_hostname[HOSTNAME_MAX_LEN];
+   if(gethostname(cstr_hostname, HOSTNAME_MAX_LEN) != 0){
+      cout << "Error: Cannot get hostname" << endl;
+      return 0;
+  }
+  string hostname = string(cstr_hostname);
+
   std::string server_address("0.0.0.0:50051");
   WorkerServiceImpl service;
 
@@ -54,7 +64,7 @@ void RunServer() {
   builder.RegisterService(&service);
   // Finally assemble the server.
   std::unique_ptr<Server> server(builder.BuildAndStart());
-  std::cout << "Server listening on " << server_address << std::endl;
+  LOG(INFO) << "Worker (" << hostname << ") is listening on " << server_address;
 
   // Wait for the server to shutdown. Note that some other thread must be
   // responsible for shutting down the server for this call to ever return.
