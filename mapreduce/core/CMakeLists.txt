@@ -10,12 +10,22 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules/")
 
+
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost REQUIRED COMPONENTS log thread system filesystem program_options)
+find_package(Casablanca REQUIRED)
+find_package(AzureStorageCpp REQUIRED)
+find_package(SSL REQUIRED)
+find_package(glog REQUIRED)
+
 #find_package(Threads REQUIRED)
 #find_package(Zookeeper REQUIRED)
 #find_package(Check REQUIRED)
 #find_package(Conservator REQUIRED)
 find_package(Protobuf REQUIRED)
-find_package(glog REQUIRED)
+
 
 include_directories(${CHECK_INCLUDE_DIRS})
 #include_directories(${ZOOKEEPER_INCLUDE_DIR}/zookeeper)
@@ -26,11 +36,11 @@ include_directories(rpc_generated)
 link_directories(/usr/local/lib)
 link_libraries(grpc++_unsecure grpc gpr ${PROTOBUF_LIBRARY})
 
-file(GLOB MY_SERVER_SRC worker-server.cpp "rpc_generated/*.cc")
-file(GLOB MY_CLIENT_SRC master-client.cpp "rpc_generated/*.cc")
+file(GLOB MY_SERVER_SRC worker-server.cpp my_fs.cpp "rpc_generated/*.cc")
+file(GLOB MY_CLIENT_SRC master-client.cpp my_fs.cpp "rpc_generated/*.cc")
 add_executable(workerserver ${MY_SERVER_SRC})
 add_executable(masterclient ${MY_CLIENT_SRC})
-target_link_libraries(workerserver glog::glog)
-target_link_libraries(masterclient glog::glog)
+target_link_libraries(workerserver glog::glog ${Boost_LIBRARIES} ${SSL_LIBRARIES} ${CASABLANCA_LIBRARY} ${AZURE_STORAGE_LIBRARY})
+target_link_libraries(masterclient glog::glog ${Boost_LIBRARIES} ${SSL_LIBRARIES} ${CASABLANCA_LIBRARY} ${AZURE_STORAGE_LIBRARY})
 
 #target_link_libraries(master ${ZOOKEEPER_LIBRARIES} ${CONSERVATOR_LIBRARIES})

@@ -6,7 +6,7 @@
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
 #include "rpc_generated/master-worker.grpc.pb.h"
-
+#include "my_fs.h"
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -22,6 +22,7 @@ class WorkerServiceImpl final : public Worker::Service {
     const Filename* request, Filename* response) override {
         LOG(INFO) << "A mapper is running with input file: " <<  request->filename();
         //download 
+        //download(request->filename());
         //exec 
         //upload
         response->set_filename("Hello " + request->filename());

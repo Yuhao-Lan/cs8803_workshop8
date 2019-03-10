@@ -1,18 +1,18 @@
 #include <iostream>
 #include <memory>
 #include <string>
-
 #include <grpc++/grpc++.h>
-
+#include <glog/logging.h>
+#include <glog/raw_logging.h>
 #include "rpc_generated/master-worker.grpc.pb.h"
-
+#include "my_fs.h"
 using grpc::Channel;
 using grpc::ClientContext;
 using grpc::Status;
 using masterworker::Filename;
 using masterworker::Filenames;
 using masterworker::Worker;
-
+using namespace std;
 class MasterClient {
  public:
   MasterClient(std::shared_ptr<Channel> channel)
@@ -49,11 +49,21 @@ class MasterClient {
 };
 
 int main(int argc, char** argv) {
-    // upload input file to blob
-    // split input file into N chunks
+  
+  if(argc != 2){
+    cout << "Invlid arguments " << endl;
+  }
+  // upload input file to blob
+  string str(argv[1]);
+  LOG(INFO) << "Master starts input file: " <<  str;
+  upload(str);
+  // split input file into N chunks
+  split(str, 1024);
+    
     // create M clients, where M is the number of worker nodes
     // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
     // wait all N pthreds to finish, and start reducers
+  
   MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));
   std::string input_filename("world.txt");
   std::string output_filename = cli.StartMapper(input_filename);
