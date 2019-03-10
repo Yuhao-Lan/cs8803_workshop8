@@ -3,6 +3,7 @@
 #include <cpprest/filestream.h>  
 #include <cpprest/containerstream.h>
 #include <fstream>
+#include <stdio.h>
 #include "my_fs.h"
 //#include "my_fs_stream.h"
 using namespace std;
@@ -87,8 +88,8 @@ int split(string filename, int chunk_size_kb){
         }
     }
      //upload
-    azure::storage::cloud_block_blob split_blob = container.get_block_blob_reference(U(filename + "." + to_string(file_counter)));
-    split_blob.upload_from_file(prefix + filename + ".temp");
+    azure::storage::cloud_block_blob split_blob2 = container.get_block_blob_reference(U(filename + "." + to_string(file_counter)));
+    split_blob2.upload_from_file(prefix + filename + ".temp");
     // remove the local temp file
     remove(prefix + filename + ".temp");
     return file_counter - 1;
