@@ -9,14 +9,18 @@ for counter in range(1, number_node + 1):
 masters = []
 workers = []
 for i in range(0, number_master):
+    print("Master node: ", mapreduce_node_hostnames[i])
     masters.append(mapreduce_node_hostnames[i])
 for i in range(number_master, number_node):
+    print("Worker node: ", mapreduce_node_hostnames[i])
     workers.append(mapreduce_node_hostnames[i])
 
 
 # compile MapReduce framework to binaries
-
-
+# print("Compiling Code...")
+# subprocess.Popen(["mkdir", ".build"])
+# subprocess.Popen(["cmake", ".."], cwd="./.build")
+# subprocess.Popen(["make"], cwd="./.build")
 # divides nodes into master group and worker groups
 # ssh nan@master ./startmaster -input 
 # distribute code
@@ -27,6 +31,12 @@ print("Uploading input files/binaries to masters")
 master_upload_tasks = []
 for master_hostname in masters:
     master_upload_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + master_hostname, "mkdir", "master"]))
+for p in master_upload_tasks:
+    p.wait()
+
+master_upload_tasks = []
+for master_hostname in masters:
+    master_upload_tasks.append(subprocess.Popen(["scp", "-o", "StrictHostKeyChecking no", input_file, admin_name + "@" + master_hostname + ":~/master"]))
 for p in master_upload_tasks:
     p.wait()
 

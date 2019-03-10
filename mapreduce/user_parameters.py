@@ -11,4 +11,6 @@ location = "eastus"
 hostname_prefix = "map-reduce-node-"
 private_ip_prefix = "10.0.0."
 
-input_file = "./core/test_files/big.txt"
+input_file = "./input_files/big.txt"
+master_binaries = "./binaries/master"
+worker_binaries = "./binaries/worker"
