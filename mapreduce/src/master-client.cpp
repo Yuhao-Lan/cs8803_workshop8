@@ -26,9 +26,17 @@ void start_mapper(string file_chunk){
   vct_mtx.lock();
   string worker_hostname = vct[local_client_id];
   vct_mtx.unlock();
-  MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
-  LOG(INFO) << "StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
-  string output_file = cli.StartMapper(file_chunk);
+  string output_file = "";
+  while(1){
+    MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
+    LOG(INFO) << "StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
+    output_file = cli.StartMapper(file_chunk);
+    if(output_file == "RPC failed"){
+
+    }else{
+      break;
+    }
+  }
   LOG(INFO) << "StartMapper: " << file_chunk << " done with output file: " << output_file; 
 }
 int main(int argc, char** argv) {
