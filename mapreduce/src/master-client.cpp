@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
   }
   // upload input file to blob
   string str(argv[1]);
-  string workers(argv[2]);
+  //string workers(argv[2]);
   size_t found = str.find_last_of("/");
   string blob_filename;
   if(found == string::npos) {
