@@ -48,14 +48,21 @@ class MasterClient {
  private:
   std::unique_ptr<Worker::Stub> stub_;
 };
-
+int create_client_handles(string hostnames, MasterClient ** client_handles, int * len){
+  cout << hostnames << endl;
+}
 int main(int argc, char** argv) {
-  
-  if(argc != 2){
+  /*
+  * 0 = program self
+  * 1 = input file
+  * 2 = workers hostname e.g. map-reduce-node-3;map-reduce-node-4;map-reduce-node-5
+  */
+  if(argc != 3){
     cout << "Invlid arguments " << endl;
   }
   // upload input file to blob
   string str(argv[1]);
+  string workers(argv[2]);
   size_t found = str.find_last_of("/");
   string blob_filename;
   if(found == string::npos) {
@@ -71,6 +78,11 @@ int main(int argc, char** argv) {
   int num_chunk = split(blob_filename, 1024);
   LOG(INFO) << "Master splitted blob file: " << blob_filename << " into " << num_chunk << " chunk";
   // create M clients, where M is the number of worker nodes
+  int number_workers;
+  MasterClient * client_handles;
+  create_client_handles(workers, &client_handles, &number_workers);
+
+
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
   // wait all N pthreds to finish, and start reducers
   
