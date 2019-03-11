@@ -40,7 +40,7 @@ void start_mapper(string file_chunk){
       break;
     }else{
       cout << "retry " << file_chunk << endl;
-      this_thread::sleep_for(2);
+      this_thread::sleep_for(2s);
     }
   }
   LOG(INFO) << worker_hostname << ".StartMapper(" << file_chunk << ") => " << output_file; 
