@@ -13,7 +13,7 @@ int next_client = 0;
 mutex next_client_mtx;
 //vector<WorkerStruct> vct;
 vector<string> vct;
-mutex vct_mtx;
+//mutex vct_mtx;
 string mappers_outputs = "";
 mutex mappers_outputs_mtx;
 
@@ -30,10 +30,8 @@ void start_mapper(string file_chunk){
     if(next_client >= vct.size()){
       next_client = 0;
     }
-    next_client_mtx.unlock();
-    vct_mtx.lock();
     worker_hostname = vct[local_client_id];
-    vct_mtx.unlock();
+    next_client_mtx.unlock();
     MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
     // LOG(INFO) << "StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
     output_file = cli.StartMapper(file_chunk);
@@ -53,6 +51,10 @@ void start_mapper(string file_chunk){
   }
   mappers_outputs_mtx.unlock();
 }
+
+
+
+
 void start_reducer(string filenames){
   string output_file = "";
   string worker_hostname = "";
@@ -65,10 +67,8 @@ void start_reducer(string filenames){
     if(next_client >= vct.size()){
       next_client = 0;
     }
-    next_client_mtx.unlock();
-    vct_mtx.lock();
     worker_hostname = vct[local_client_id];
-    vct_mtx.unlock();
+    next_client_mtx.unlock();
     MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
     // LOG(INFO) << "StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
     output_file = cli.StartReducer(filenames);
@@ -78,6 +78,9 @@ void start_reducer(string filenames){
   }
   LOG(INFO) << worker_hostname << ".StartReducer(" << filenames << ") => " << output_file; 
 }
+
+
+
 int main(int argc, char** argv) {
   /*
   * 0 = program self
