@@ -59,18 +59,19 @@ void start_reducer(string filenames){
   string output_file = "";
   string worker_hostname = "";
   //
+  
   while(1){
     int local_client_id = 0;
-    next_client_mtx.lock();
+    //next_client_mtx.lock();
     local_client_id = next_client;
     next_client ++;
     if(next_client >= vct.size()){
       next_client = 0;
     }
     worker_hostname = vct[local_client_id];
-    next_client_mtx.unlock();
+    //next_client_mtx.unlock();
     MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
-    // LOG(INFO) << "StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
+    LOG(INFO) << ".....StartMapper. Using worker node: " << worker_hostname; 
     output_file = cli.StartReducer(filenames);
     if(output_file != "RPC failed"){
       break;

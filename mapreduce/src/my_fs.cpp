@@ -29,6 +29,7 @@ int upload(string src_filename, string dest_filename){
 }
 
 int download(string src_filename, string dest_filename){
+    cout << "FS: download: " << src_filename ", to " << dest_filename <<endl;
      // Define the connection-string with your values.
     const utility::string_t storage_connection_string(U(connect_string));
     // Retrieve storage account from connection string.
