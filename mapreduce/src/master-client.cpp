@@ -50,7 +50,6 @@ void start_mapper(string file_chunk){
     mappers_outputs = output_file;
   }else{
     mappers_outputs = mappers_outputs + ";" + output_file;
-    this
   }
   mappers_outputs_mtx.unlock();
 }
