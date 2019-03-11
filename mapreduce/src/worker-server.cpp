@@ -50,8 +50,8 @@ class WorkerServiceImpl final : public Worker::Service {
           dup2(out_fd, 1);
           //const char * loc = "~/mapreduce/mapper.py";
           //char * const cmd[] = {"./mapper.py", nullptr};
-          const char * loc = "/usr/bin/wc";
-          char * const cmd[] = {"wc", nullptr};
+          const char * loc = "/home/nan/mapreduce";
+          char * const cmd[] = {"mapper.py", nullptr};
           execvp(loc, cmd);
         }else{
           int status;
