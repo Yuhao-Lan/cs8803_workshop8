@@ -107,8 +107,10 @@ class WorkerServiceImpl final : public Worker::Service {
         string sort = "sort reduce-input > reduce.sort";
         system(sort.c_str());
         // exec("cat filename | python reduce.py > output.txt");
+        LOG(INFO) << hostname << ".Reducer.User-Reduce";
         string reduce = "cat reduce.sort | ./mapreduce/reducer.py > result.txt";
         system(reduce.c_str());
+        LOG(INFO) << hostname << ".Upload";
         upload("result.txt", "result.txt");
         response->set_filename("result.txt");
         LOG(INFO) << "The reducer is done with output file: ";
