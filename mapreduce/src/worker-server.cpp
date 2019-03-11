@@ -75,7 +75,7 @@ class WorkerServiceImpl final : public Worker::Service {
 
   Status StartReducer(ServerContext* context, 
     const Filenames* request, Filename* response) override {
-        LOG(INFO) << "A reducer is running with input files: " <<  request->filenames();
+        LOG(INFO) << hostname << ".Reducer(" <<  request->filenames() << ")";
         
         // std::ofstream ofile("reduce-input", std::ios::app);
         ostringstream command;
@@ -88,22 +88,29 @@ class WorkerServiceImpl final : public Worker::Service {
           if(found == string::npos){
             // not found, download the last one
             download(filenames, filenames + ".reduce-input." + to_string(counter));
-            command << filenames << " ";
+            command << filenames + ".reduce-input." + to_string(counter) << " ";
             break;
           }else{
             string temp = filenames.substr(0, found);
             download(temp, temp + ".reduce-input." + to_string(counter));
+            command << temp + ".reduce-input." + to_string(counter) << " ";
             counter ++;
             filenames = filenames.substr(found + 1);
-            command << temp << " ";
+            
           }
         }while(1);
         command << "> " << "reduce-input";
+        LOG(INFO) << hostname << ".Reducer.Merge";
         system(command.str().c_str());
         // exec sort, [partition]
+        LOG(INFO) << hostname << ".Reducer.Sort";
+        string sort = "sort reduce-input > reduce.sort";
+        system(sort.c_str());
         // exec("cat filename | python reduce.py > output.txt");
-        // upload(output.txt);
-        response->set_filename("Reducer,Hello " + request->filenames());
+        string reduce = "cat reduce.sort | ./mapreduce/reducer.py > result.txt";
+        system(reduce.c_str());
+        upload("result.txt", "result.txt");
+        response->set_filename("result.txt");
         LOG(INFO) << "The reducer is done with output file: ";
         return Status::OK;
   }
