@@ -13,6 +13,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <fstream>
 #define HOSTNAME_MAX_LEN 128
 
 using grpc::Server;
