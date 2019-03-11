@@ -16,7 +16,7 @@ int main(){
         
         //string cmd [CMD_LEN] = {"python", "test.py", NULL};
         //char * const * cmd_ = new char* [CMD_LEN];
-        const char * loc = "./mapper.py";
+        const char * loc = "./test/mapper.py";
         /*for(int i = 0 ; i < CMD_LEN-1 ; i++){
             cmd_[i] = cmd[i].c_str();
         }
