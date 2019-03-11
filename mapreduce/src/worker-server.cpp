@@ -47,7 +47,7 @@ class WorkerServiceImpl final : public Worker::Service {
         else if (pid == 0)
         {
           dup2(in_fd, 0);
-          dup2(out_fd, 1);
+          //dup2(out_fd, 1);
           //const char * loc = "~/mapreduce/mapper.py";
           //char * const cmd[] = {"./mapper.py", nullptr};
           const char * loc = "/home/nan/mapreduce";
