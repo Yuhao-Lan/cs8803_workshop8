@@ -42,12 +42,13 @@ class WorkerServiceImpl final : public Worker::Service {
         if(pid == -1)
         {
           LOG(WARNING) << hostname << ".Mapper(" <<  request->filename() << ") failed";
-          return Status::FAIL;
+          return Status::CANCELLED;
         }
         else if (pid == 0)
         {
           dup2(in_fd, 0);
           dup2(out_fd, 1);
+          const char * loc = "./mapper.py";
           char * const cmd[] = {"./mapper.py", nullptr};
           execvp(loc, cmd);
         }else{
