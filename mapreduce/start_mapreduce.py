@@ -45,5 +45,12 @@ print("Masters are running....")
 
 #fuser -k -n tcp 3000
 print("Killing worker...")
+worker_tasks_2 = []
+for worker_hostname in workers:
+    worker_tasks_2.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + worker_hostname, 
+        "fuser", "-k", "-n", "tcp", "50051"]))
+for p in worker_tasks_2:
+    p.wait()
+
 for p in worker_tasks:
     p.kill()
