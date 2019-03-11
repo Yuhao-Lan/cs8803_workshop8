@@ -66,10 +66,32 @@ class WorkerServiceImpl final : public Worker::Service {
         close(in_fd);
         return Status::OK;
   }
+
+
+
+
   Status StartReducer(ServerContext* context, 
     const Filenames* request, Filename* response) override {
         LOG(INFO) << "A reducer is running with input files: " <<  request->filenames();
+        
         // download all the mappers' output files
+        string filenames = request->filenames();
+        int counter = 1;
+        do{
+          std::size_t found = filenames.find(';');
+          if(found == string::npos){
+            // not found, download the last one
+            download(filenames, filenames + ".reduce-input." + to_string(counter));
+            break;
+          }else{
+            string temp = filenames.substr(0, found);
+            download(temp, temp + ".reduce-input." + to_string(counter));
+            counter ++;
+            filenames = filenames.substr(found);
+          }
+        }while(1);
+
+        
         // exec sort, [partition]
         // exec("cat filename | python reduce.py > output.txt");
         // upload(output.txt);
