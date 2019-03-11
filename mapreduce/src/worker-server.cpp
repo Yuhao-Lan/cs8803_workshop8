@@ -70,7 +70,7 @@ class WorkerServiceImpl final : public Worker::Service {
         // exec sort, [partition]
         // exec("cat filename | python reduce.py > output.txt");
         // upload(output.txt);
-        response->set_filename("Hello " + request->filenames());
+        response->set_filename("Reducer,Hello " + request->filenames());
         LOG(INFO) << "The reducer is done with output file: ";
         return Status::OK;
   }

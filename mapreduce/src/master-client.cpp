@@ -15,6 +15,8 @@ vector<string> vct;
 mutex vct_mtx;
 string mappers_outputs = "";
 mutex mappers_outputs_mtx;
+
+
 void start_mapper(string file_chunk){
   string output_file = "";
   string worker_hostname = "";
@@ -36,6 +38,8 @@ void start_mapper(string file_chunk){
     output_file = cli.StartMapper(file_chunk);
     if(output_file != "RPC failed"){
       break;
+    }else{
+      cout << "retry " << file_chunk << endl;
     }
   }
   LOG(INFO) << worker_hostname << ".StartMapper(" << file_chunk << ") => " << output_file; 
