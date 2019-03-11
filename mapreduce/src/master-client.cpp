@@ -113,7 +113,7 @@ int main(int argc, char** argv) {
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
   thread * mapper_thread = new thread[num_chunk];
   for(int i = 0; i < num_chunk; i++){
-    mapper_thread[i] = thread(start_mapper, blob_filename + "." + to_string(i));
+    mapper_thread[i] = thread(start_mapper, blob_filename + "." + to_string(i+1));
   }
   // wait all N pthreds to finish, and start reducers
   for(int i = 0; i < num_chunk; i++){

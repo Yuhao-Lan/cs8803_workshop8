@@ -43,9 +43,8 @@ for p in master_tasks:
 print("Masters are running....")
 
 '''
-time.sleep(4)
-
+#fuser -k -n tcp 3000
 print("Killing worker...")
 for p in worker_tasks:
     pass
-    #p.kill()
+    p.kill()
