@@ -23,9 +23,10 @@ for worker_hostname in workers:
     worker_tasks.append(subprocess.Popen(["ssh", "-o", "StrictHostKeyChecking no", admin_name + "@" + worker_hostname, 
         dest + "/" + worker_binary_name]))
 
-time.sleep(5)
+time.sleep(10)
 
 print("Workers are running....")
+'''
 print("Start masters [Here, only start a single master without using leader election]")
 master_tasks = []
 workers_hostname__ = '"' + ";".join(workers) + '"'
@@ -41,9 +42,10 @@ for p in master_tasks:
 
 print("Masters are running....")
 
-
+'''
 time.sleep(4)
 
 print("Killing worker...")
 for p in worker_tasks:
-    p.kill()
+    pass
+    #p.kill()

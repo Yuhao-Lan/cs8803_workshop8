@@ -40,6 +40,7 @@ void start_mapper(string file_chunk){
       break;
     }else{
       cout << "retry " << file_chunk << endl;
+      this_thread::sleep_for(2);
     }
   }
   LOG(INFO) << worker_hostname << ".StartMapper(" << file_chunk << ") => " << output_file; 
@@ -48,6 +49,7 @@ void start_mapper(string file_chunk){
     mappers_outputs = output_file;
   }else{
     mappers_outputs = mappers_outputs + ";" + output_file;
+    this
   }
   mappers_outputs_mtx.unlock();
 }
