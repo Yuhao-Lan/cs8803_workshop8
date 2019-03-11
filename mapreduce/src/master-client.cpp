@@ -7,6 +7,7 @@
 #include <mutex>
 #include "master-client-utilities.h"
 #include "my_fs.h"
+#include <chrono>
 using namespace std;
 int next_client = 0;
 mutex next_client_mtx;
@@ -40,7 +41,7 @@ void start_mapper(string file_chunk){
       break;
     }else{
       cout << "retry " << file_chunk << endl;
-      this_thread::sleep_for(2s);
+      this_thread::sleep_for(chrono::seconds(2));
     }
   }
   LOG(INFO) << worker_hostname << ".StartMapper(" << file_chunk << ") => " << output_file; 
