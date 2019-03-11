@@ -26,7 +26,7 @@ for worker_hostname in workers:
 time.sleep(10)
 
 print("Workers are running....")
-'''
+
 print("Start masters [Here, only start a single master without using leader election]")
 master_tasks = []
 workers_hostname__ = '"' + ";".join(workers) + '"'
@@ -42,9 +42,8 @@ for p in master_tasks:
 
 print("Masters are running....")
 
-'''
+
 #fuser -k -n tcp 3000
 print("Killing worker...")
 for p in worker_tasks:
-    pass
     p.kill()
