@@ -14,6 +14,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <fstream>
+#include <cstdlib>
+#include <sstream>
 #define HOSTNAME_MAX_LEN 128
 
 using grpc::Server;
@@ -75,7 +77,9 @@ class WorkerServiceImpl final : public Worker::Service {
     const Filenames* request, Filename* response) override {
         LOG(INFO) << "A reducer is running with input files: " <<  request->filenames();
         
-        std::ofstream ofile("reduce-input", std::ios::app);
+        // std::ofstream ofile("reduce-input", std::ios::app);
+        ostringstream command;
+        command << "cat ";
         // download all the mappers' output files
         string filenames = request->filenames();
         int counter = 1;
@@ -84,22 +88,18 @@ class WorkerServiceImpl final : public Worker::Service {
           if(found == string::npos){
             // not found, download the last one
             download(filenames, filenames + ".reduce-input." + to_string(counter));
-            std::ifstream ifile(filenames);
-            ofile << ifile.rdbuf();
-            ifile.close();
+            command << filenames << " ";
             break;
           }else{
             string temp = filenames.substr(0, found);
             download(temp, temp + ".reduce-input." + to_string(counter));
             counter ++;
             filenames = filenames.substr(found + 1);
-            std::ifstream ifile(temp);
-            ofile << ifile.rdbuf();
-            ifile.close();
+            command << temp << " ";
           }
         }while(1);
-
-        ofile.close();
+        command << "> " << "reduce-input";
+        system(command.str().c_str());
         // exec sort, [partition]
         // exec("cat filename | python reduce.py > output.txt");
         // upload(output.txt);
