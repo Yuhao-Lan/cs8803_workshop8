@@ -74,6 +74,7 @@ class WorkerServiceImpl final : public Worker::Service {
     const Filenames* request, Filename* response) override {
         LOG(INFO) << "A reducer is running with input files: " <<  request->filenames();
         
+        std::ofstream ofile("reduce-input", std::ios::app);
         // download all the mappers' output files
         string filenames = request->filenames();
         int counter = 1;
@@ -82,16 +83,22 @@ class WorkerServiceImpl final : public Worker::Service {
           if(found == string::npos){
             // not found, download the last one
             download(filenames, filenames + ".reduce-input." + to_string(counter));
+            std::ifstream ifile(filenames);
+            ofile << ifile.rdbuf();
+            ifile.close();
             break;
           }else{
             string temp = filenames.substr(0, found);
             download(temp, temp + ".reduce-input." + to_string(counter));
             counter ++;
-            filenames = filenames.substr(found);
+            filenames = filenames.substr(found + 1);
+            std::ifstream ifile(temp);
+            ofile << ifile.rdbuf();
+            ifile.close();
           }
         }while(1);
 
-        
+        ofile.close();
         // exec sort, [partition]
         // exec("cat filename | python reduce.py > output.txt");
         // upload(output.txt);
