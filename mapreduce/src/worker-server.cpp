@@ -48,8 +48,10 @@ class WorkerServiceImpl final : public Worker::Service {
         {
           dup2(in_fd, 0);
           dup2(out_fd, 1);
-          const char * loc = "~/mapreduce/mapper.py";
-          char * const cmd[] = {"./mapper.py", nullptr};
+          //const char * loc = "~/mapreduce/mapper.py";
+          //char * const cmd[] = {"./mapper.py", nullptr};
+          const char * loc = "/usr/bin/wc";
+          char * const cmd[] = {"wc", nullptr};
           execvp(loc, cmd);
         }else{
           int status;
@@ -57,6 +59,7 @@ class WorkerServiceImpl final : public Worker::Service {
         }
         
         //upload
+        upload(map_output_file, map_output_file);
         response->set_filename(map_output_file);
         LOG(INFO) << "The mapper is done with output file: " << map_output_file;
         close(out_fd);
