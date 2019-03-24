@@ -65,9 +65,33 @@ void delete_worker(string worker_hostname){
 }
 
 /* For each worker, start a pthread to do ping */
-void update_worker(vector<string> * worker_hostnames){
+void update_worker(vector<string> *worker_hostnames){
+  vector<string> new_workers;
+  vector<string> removed_workers;
+  __vct_mtx.lock();
   for (string& hostname : *worker_hostnames) {
-    add_worker(hostname);  
+    vector<string>::iterator it = find(__vct.begin(), __vct.end(), hostname);
+    if(it != __vct.end()){  
+      // already exist
+    }else{
+      new_workers.push_back(hostname);
+    }
+  }
+  for (string& hostname : __vct) {
+    vector<string>::iterator it = find(worker_hostnames->begin(), worker_hostnames->end(), hostname);
+    if(it != worker_hostnames->end()){  
+      // already exist
+    }else{
+      removed_workers.push_back(hostname);
+    }
+  }
+  __vct_mtx.unlock();
+
+  for(string &hostname: new_workers){
+    add_worker(hostname);
+  }
+  for(string &hostname: removed_workers){
+    delete_worker(hostname);
   }
 }
 
@@ -166,7 +190,7 @@ int main(int argc, char** argv) {
   * 0 = program self
   * 1 = input file
   */
-  if(argc != 2){
+  /*if(argc != 2){
     cout << "Invlid arguments " << endl;
   }
   // upload input file to blob
@@ -206,7 +230,7 @@ int main(int argc, char** argv) {
   //MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));
   //std::string input_filename("world.txt");
   //std::string output_filename = cli.StartMapper(input_filename);
-  //std::cout << "Worker received: " << output_filename << std::endl;
+  //std::cout << "Worker received: " << output_filename << std::endl;*/
 
   return 0;
 }
