@@ -16,6 +16,8 @@
 #include <fstream>
 #include <cstdlib>
 #include <sstream>
+#include <conservator/ConservatorFrameworkFactory.h>
+#include <zookeeper/zookeeper.h>
 #define HOSTNAME_MAX_LEN 128
 
 using grpc::Server;
@@ -129,6 +131,32 @@ class WorkerServiceImpl final : public Worker::Service {
 
 };
 
+#define HOSTNAME_MAX_LEN 128
+unique_ptr<ConservatorFramework> framework;
+void NotifyZookeeper() {
+      // check if the server is the leader. Leader is master1
+    char cstr_hostname[HOSTNAME_MAX_LEN];
+    
+    if(gethostname(cstr_hostname, HOSTNAME_MAX_LEN) != 0){
+        cout << "Error: Cannot get hostname" << endl;
+        return 0;
+    }
+    string hostname = string(cstr_hostname);
+    
+    // connect to local zookeeper server
+    ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
+    framework = factory.newClient("cli-node:2181");
+    framework->start();
+   
+    framework->create()->forPath("/worker", (char *) "worker-nodes");
+    string nodename = "/worker/" + hostname;
+    if(framework->create()->withFlags(ZOO_EPHEMERAL)->forPath(nodename, nodename.c_str()) != 0){
+        cout << "Error: Failed to create node " << nodename << endl;
+        //framework->close();
+    }
+}
+
+
 void RunServer() {
    char cstr_hostname[HOSTNAME_MAX_LEN];
    if(gethostname(cstr_hostname, HOSTNAME_MAX_LEN) != 0){
@@ -158,8 +186,9 @@ void RunServer() {
 int main(int argc, char** argv) {
   // register with zookeeper
 
-
+  NotifyZookeeper();
   // run server
   RunServer();
+  framework->close();
   return 0;
 }
