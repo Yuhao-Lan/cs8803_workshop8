@@ -3,34 +3,74 @@
 #include <grpc++/grpc++.h>
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
+#include <conservator/ConservatorFrameworkFactory.h>
+#include <zookeeper/zookeeper.h>
 #include <thread>
 #include <mutex>
 #include "master-client-utilities.h"
 #include "my_fs.h"
 #include <chrono>
 using namespace std;
-int next_client = 0;
-mutex next_client_mtx;
-//vector<WorkerStruct> vct;
-vector<string> vct;
-//mutex vct_mtx;
+
+unique_ptr<ConservatorFramework> framework;
+//////////////////////// Vector keeps track of workers /////////////////
+
+static int __counter = 0;
+vector<string> __vct;
+mutex __vct_mtx;
+
+/* For each worker, start a pthread to do ping */
+void update_worker(vector<string> * worker_hostnames){
+  __vct_mtx.lock();
+  __vct.clear();
+  for (string& hostname : *worker_hostnames) {
+        __vct.push_back(hostname);
+    }
+  __vct_mtx.unlock();
+}
+
+string get_next_worker_hostname(){
+
+    __vct_mtx.lock();
+    if(__counter >= __vct.size()){
+      __counter = 0;
+    }
+    string __hostname = __vct[__counter];
+    __counter ++;
+    __vct_mtx.unlock();
+    return __hostname;
+}
+
+void worker_update_fn(zhandle_t *zh, int type,
+                    int state, const char *path,void *watcherCtx) {
+    cout << "new worker updated" << endl;
+    cout << type << state << endl;
+    // update vector
+
+    //ConservatorFramework* framework = (ConservatorFramework *) watcherCtx;
+    //vector<string> workers = framework->getChildren()->withWatcher(worker_update_fn, framework)->forPath("/worker");
+    
+    ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
+    unique_ptr<ConservatorFramework> framework = factory.newClient("cli-node:2181");
+    framework->start();
+    vector<string> worker_hostnames = framework->getChildren()->withWatcher(worker_update_fn, &framework)->forPath("/worker");
+    update_worker( &worker_hostname );
+    
+}
+
+
+////////////////////////// Mapper /////////////////////
+
 string mappers_outputs = "";
 mutex mappers_outputs_mtx;
-
 
 void start_mapper(string file_chunk){
   string output_file = "";
   string worker_hostname = "";
   //
   while(1){
-    int local_client_id = 0;
-    //next_client_mtx.lock();
-    local_client_id = next_client;
-    next_client ++;
-    if(next_client >= vct.size()){
-      next_client = 0;
-    }
-    worker_hostname = vct[local_client_id];
+
+    worker_hostname = get_next_worker_hostname();
     //next_client_mtx.unlock();
     MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
     LOG(INFO) << ".....StartMapper: " << file_chunk << ". Using worker node: " << worker_hostname; 
@@ -53,22 +93,14 @@ void start_mapper(string file_chunk){
 }
 
 
-
+/////////////////////// Reducer //////////////////////////////
 
 void start_reducer(string filenames){
   string output_file = "";
   string worker_hostname = "";
-  //
-  
+
   while(1){
-    int local_client_id = 0;
-    //next_client_mtx.lock();
-    local_client_id = next_client;
-    next_client ++;
-    if(next_client >= vct.size()){
-      next_client = 0;
-    }
-    worker_hostname = vct[local_client_id];
+    worker_hostname = get_next_worker_hostname();
     //next_client_mtx.unlock();
     MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
     LOG(INFO) << ".....StartMapper. Using worker node: " << worker_hostname; 
@@ -81,8 +113,14 @@ void start_reducer(string filenames){
 }
 
 
-
 int main(int argc, char** argv) {
+  // connect to local zookeeper server
+  ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
+  framework = factory.newClient("cli-node:2181");
+  framework->start();
+  // init workers, master watch workers
+  vector<string> worker_hostnames = framework->getChildren()->withWatcher(worker_update_fn, &framework)->forPath("/worker");
+  update_worker( &worker_hostname );
   /*
   * 0 = program self
   * 1 = input file
@@ -107,10 +145,9 @@ int main(int argc, char** argv) {
   LOG(INFO) << "Master is splitting blob file: " << blob_filename;
   int num_chunk = split(blob_filename, 1024);
   LOG(INFO) << "Master splitted blob file: " << blob_filename << " into " << num_chunk << " chunk";
-  // create M clients, where M is the number of worker nodes, ask from zookeeper
 
-  
-  create_client_handles(&vct);
+
+
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
   thread * mapper_thread = new thread[num_chunk];
   for(int i = 0; i < num_chunk; i++){

@@ -27,3 +27,21 @@ int create_client_handles(vector<string> * vct){
     vct->push_back("map-reduce-node-5");
     return 3;
 }
+
+
+static int __counter = 0;
+vector<string> vct;
+mutex vct_mtx;
+
+
+string get_next_worker_hostname(){
+
+    vct_mtx.lock();
+    if(__counter >= vct.size()){
+      __counter = 0;
+    }
+    string __hostname = vct[__counter];
+    __counter ++;
+    vct_mtx.unlock();
+    return __hostname;
+}
