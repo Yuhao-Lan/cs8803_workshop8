@@ -116,6 +116,17 @@ class WorkerServiceImpl final : public Worker::Service {
         LOG(INFO) << "The reducer is done with output file: ";
         return Status::OK;
   }
+
+
+
+  Status Ping(ServerContext* context, 
+    const PingData* request, PingData* response) override {
+      LOG(INFO) << hostname << ".Ping()";
+      int data = request->data();
+      response->set_data(data);
+      return Status::OK;
+  }
+
 };
 
 void RunServer() {
