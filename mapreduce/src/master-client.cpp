@@ -115,11 +115,11 @@ void worker_update_fn(zhandle_t *zh, int type,
     //ConservatorFramework* framework = (ConservatorFramework *) watcherCtx;
     //vector<string> workers = framework->getChildren()->withWatcher(worker_update_fn, framework)->forPath("/worker");
     
-    ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
+    /*ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
     unique_ptr<ConservatorFramework> framework = factory.newClient("cli-node:2181");
     framework->start();
     vector<string> worker_hostnames = framework->getChildren()->withWatcher(worker_update_fn, &framework)->forPath("/worker");
-    update_worker( &worker_hostnames );
+    update_worker( &worker_hostnames );*/
     
 }
 
@@ -187,6 +187,7 @@ int main(int argc, char** argv) {
   // init workers, master watch workers
   vector<string> worker_hostnames = framework->getChildren()->withWatcher(worker_update_fn, &framework)->forPath("/worker");
   update_worker(&worker_hostnames);
+  while(1);
   /*
   * 0 = program self
   * 1 = input file
