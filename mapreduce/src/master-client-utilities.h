@@ -57,7 +57,7 @@ class MasterClient {
     pingdata.set_pingdata("qinnan");
     PingData return_pingdata;
     ClientContext context;
-    Status status = stub_->StartReducer(&context, pingdata, &return_pingdata);
+    Status status = stub_->Ping(&context, pingdata, &return_pingdata);
     if (status.ok()) {
       return true;
     } else {
