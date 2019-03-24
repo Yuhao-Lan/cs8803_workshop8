@@ -105,7 +105,7 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::masterworker::PingData, data_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::masterworker::PingData, pingdata_),
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::masterworker::Filename)},
@@ -142,17 +142,17 @@ void AddDescriptorsImpl() {
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
       "\n\023master-worker.proto\022\014masterworker\"\034\n\010F"
       "ilename\022\020\n\010filename\030\001 \001(\t\"\036\n\tFilenames\022\021"
-      "\n\tfilenames\030\001 \001(\t\"\030\n\010PingData\022\014\n\004data\030\001 "
-      "\001(\0052\306\001\n\006Worker\022\?\n\013StartMapper\022\026.masterwo"
-      "rker.Filename\032\026.masterworker.Filename\"\000\022"
-      "A\n\014StartReducer\022\027.masterworker.Filenames"
-      "\032\026.masterworker.Filename\"\000\0228\n\004Ping\022\026.mas"
-      "terworker.PingData\032\026.masterworker.PingDa"
-      "ta\"\000B6\n\033io.grpc.examples.helloworldB\017Hel"
-      "loWorldProtoP\001\242\002\003HLWb\006proto3"
+      "\n\tfilenames\030\001 \001(\t\"\034\n\010PingData\022\020\n\010pingdat"
+      "a\030\001 \001(\0052\306\001\n\006Worker\022\?\n\013StartMapper\022\026.mast"
+      "erworker.Filename\032\026.masterworker.Filenam"
+      "e\"\000\022A\n\014StartReducer\022\027.masterworker.Filen"
+      "ames\032\026.masterworker.Filename\"\000\0228\n\004Ping\022\026"
+      ".masterworker.PingData\032\026.masterworker.Pi"
+      "ngData\"\000B6\n\033io.grpc.examples.helloworldB"
+      "\017HelloWorldProtoP\001\242\002\003HLWb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 388);
+      descriptor, 392);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "master-worker.proto", &protobuf_RegisterTypes);
 }
@@ -659,7 +659,7 @@ void Filenames::InternalSwap(Filenames* other) {
 void PingData::InitAsDefaultInstance() {
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int PingData::kDataFieldNumber;
+const int PingData::kPingdataFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PingData::PingData()
@@ -673,12 +673,12 @@ PingData::PingData(const PingData& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  data_ = from.data_;
+  pingdata_ = from.pingdata_;
   // @@protoc_insertion_point(copy_constructor:masterworker.PingData)
 }
 
 void PingData::SharedCtor() {
-  data_ = 0;
+  pingdata_ = 0;
 }
 
 PingData::~PingData() {
@@ -709,7 +709,7 @@ void PingData::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  data_ = 0;
+  pingdata_ = 0;
   _internal_metadata_.Clear();
 }
 
@@ -723,14 +723,14 @@ bool PingData::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // int32 data = 1;
+      // int32 pingdata = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
 
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &data_)));
+                 input, &pingdata_)));
         } else {
           goto handle_unusual;
         }
@@ -763,9 +763,9 @@ void PingData::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 data = 1;
-  if (this->data() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->data(), output);
+  // int32 pingdata = 1;
+  if (this->pingdata() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->pingdata(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -782,9 +782,9 @@ void PingData::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 data = 1;
-  if (this->data() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->data(), target);
+  // int32 pingdata = 1;
+  if (this->pingdata() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->pingdata(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -804,11 +804,11 @@ size_t PingData::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // int32 data = 1;
-  if (this->data() != 0) {
+  // int32 pingdata = 1;
+  if (this->pingdata() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->data());
+        this->pingdata());
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -838,8 +838,8 @@ void PingData::MergeFrom(const PingData& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.data() != 0) {
-    set_data(from.data());
+  if (from.pingdata() != 0) {
+    set_pingdata(from.pingdata());
   }
 }
 
@@ -867,7 +867,7 @@ void PingData::Swap(PingData* other) {
 }
 void PingData::InternalSwap(PingData* other) {
   using std::swap;
-  swap(data_, other->data_);
+  swap(pingdata_, other->pingdata_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 

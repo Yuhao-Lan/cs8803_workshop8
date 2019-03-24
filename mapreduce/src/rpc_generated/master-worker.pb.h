@@ -376,17 +376,17 @@ class PingData : public ::google::protobuf::Message /* @@protoc_insertion_point(
 
   // accessors -------------------------------------------------------
 
-  // int32 data = 1;
-  void clear_data();
-  static const int kDataFieldNumber = 1;
-  ::google::protobuf::int32 data() const;
-  void set_data(::google::protobuf::int32 value);
+  // int32 pingdata = 1;
+  void clear_pingdata();
+  static const int kPingdataFieldNumber = 1;
+  ::google::protobuf::int32 pingdata() const;
+  void set_pingdata(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:masterworker.PingData)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::int32 data_;
+  ::google::protobuf::int32 pingdata_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_master_2dworker_2eproto::TableStruct;
 };
@@ -515,18 +515,18 @@ inline void Filenames::set_allocated_filenames(::std::string* filenames) {
 
 // PingData
 
-// int32 data = 1;
-inline void PingData::clear_data() {
-  data_ = 0;
+// int32 pingdata = 1;
+inline void PingData::clear_pingdata() {
+  pingdata_ = 0;
 }
-inline ::google::protobuf::int32 PingData::data() const {
-  // @@protoc_insertion_point(field_get:masterworker.PingData.data)
-  return data_;
+inline ::google::protobuf::int32 PingData::pingdata() const {
+  // @@protoc_insertion_point(field_get:masterworker.PingData.pingdata)
+  return pingdata_;
 }
-inline void PingData::set_data(::google::protobuf::int32 value) {
+inline void PingData::set_pingdata(::google::protobuf::int32 value) {
   
-  data_ = value;
-  // @@protoc_insertion_point(field_set:masterworker.PingData.data)
+  pingdata_ = value;
+  // @@protoc_insertion_point(field_set:masterworker.PingData.pingdata)
 }
 
 #ifdef __GNUC__
