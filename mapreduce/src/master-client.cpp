@@ -33,7 +33,6 @@ void ping_worker_node(string hostname){
     while(1){
         MasterClient cli(grpc::CreateChannel(hostname + ":50051", grpc::InsecureChannelCredentials()));
         this_thread::sleep_for(chrono::seconds(2));
-        output_file = cli.Ping();
         if(cli.Ping()){
           count = 0;
         }else{
