@@ -376,17 +376,25 @@ class PingData : public ::google::protobuf::Message /* @@protoc_insertion_point(
 
   // accessors -------------------------------------------------------
 
-  // int32 pingdata = 1;
+  // string pingdata = 1;
   void clear_pingdata();
   static const int kPingdataFieldNumber = 1;
-  ::google::protobuf::int32 pingdata() const;
-  void set_pingdata(::google::protobuf::int32 value);
+  const ::std::string& pingdata() const;
+  void set_pingdata(const ::std::string& value);
+  #if LANG_CXX11
+  void set_pingdata(::std::string&& value);
+  #endif
+  void set_pingdata(const char* value);
+  void set_pingdata(const char* value, size_t size);
+  ::std::string* mutable_pingdata();
+  ::std::string* release_pingdata();
+  void set_allocated_pingdata(::std::string* pingdata);
 
   // @@protoc_insertion_point(class_scope:masterworker.PingData)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::int32 pingdata_;
+  ::google::protobuf::internal::ArenaStringPtr pingdata_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_master_2dworker_2eproto::TableStruct;
 };
@@ -515,18 +523,57 @@ inline void Filenames::set_allocated_filenames(::std::string* filenames) {
 
 // PingData
 
-// int32 pingdata = 1;
+// string pingdata = 1;
 inline void PingData::clear_pingdata() {
-  pingdata_ = 0;
+  pingdata_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
-inline ::google::protobuf::int32 PingData::pingdata() const {
+inline const ::std::string& PingData::pingdata() const {
   // @@protoc_insertion_point(field_get:masterworker.PingData.pingdata)
-  return pingdata_;
+  return pingdata_.GetNoArena();
 }
-inline void PingData::set_pingdata(::google::protobuf::int32 value) {
+inline void PingData::set_pingdata(const ::std::string& value) {
   
-  pingdata_ = value;
+  pingdata_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:masterworker.PingData.pingdata)
+}
+#if LANG_CXX11
+inline void PingData::set_pingdata(::std::string&& value) {
+  
+  pingdata_.SetNoArena(
+    &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
+  // @@protoc_insertion_point(field_set_rvalue:masterworker.PingData.pingdata)
+}
+#endif
+inline void PingData::set_pingdata(const char* value) {
+  GOOGLE_DCHECK(value != NULL);
+  
+  pingdata_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:masterworker.PingData.pingdata)
+}
+inline void PingData::set_pingdata(const char* value, size_t size) {
+  
+  pingdata_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:masterworker.PingData.pingdata)
+}
+inline ::std::string* PingData::mutable_pingdata() {
+  
+  // @@protoc_insertion_point(field_mutable:masterworker.PingData.pingdata)
+  return pingdata_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* PingData::release_pingdata() {
+  // @@protoc_insertion_point(field_release:masterworker.PingData.pingdata)
+  
+  return pingdata_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void PingData::set_allocated_pingdata(::std::string* pingdata) {
+  if (pingdata != NULL) {
+    
+  } else {
+    
+  }
+  pingdata_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), pingdata);
+  // @@protoc_insertion_point(field_set_allocated:masterworker.PingData.pingdata)
 }
 
 #ifdef __GNUC__

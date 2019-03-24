@@ -143,7 +143,7 @@ void AddDescriptorsImpl() {
       "\n\023master-worker.proto\022\014masterworker\"\034\n\010F"
       "ilename\022\020\n\010filename\030\001 \001(\t\"\036\n\tFilenames\022\021"
       "\n\tfilenames\030\001 \001(\t\"\034\n\010PingData\022\020\n\010pingdat"
-      "a\030\001 \001(\0052\306\001\n\006Worker\022\?\n\013StartMapper\022\026.mast"
+      "a\030\001 \001(\t2\306\001\n\006Worker\022\?\n\013StartMapper\022\026.mast"
       "erworker.Filename\032\026.masterworker.Filenam"
       "e\"\000\022A\n\014StartReducer\022\027.masterworker.Filen"
       "ames\032\026.masterworker.Filename\"\000\0228\n\004Ping\022\026"
@@ -673,12 +673,15 @@ PingData::PingData(const PingData& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  pingdata_ = from.pingdata_;
+  pingdata_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (from.pingdata().size() > 0) {
+    pingdata_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pingdata_);
+  }
   // @@protoc_insertion_point(copy_constructor:masterworker.PingData)
 }
 
 void PingData::SharedCtor() {
-  pingdata_ = 0;
+  pingdata_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 PingData::~PingData() {
@@ -687,6 +690,7 @@ PingData::~PingData() {
 }
 
 void PingData::SharedDtor() {
+  pingdata_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void PingData::SetCachedSize(int size) const {
@@ -709,7 +713,7 @@ void PingData::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  pingdata_ = 0;
+  pingdata_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   _internal_metadata_.Clear();
 }
 
@@ -723,14 +727,16 @@ bool PingData::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // int32 pingdata = 1;
+      // string pingdata = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &pingdata_)));
+            static_cast< ::google::protobuf::uint8>(10u /* 10 & 0xFF */)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_pingdata()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->pingdata().data(), static_cast<int>(this->pingdata().length()),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "masterworker.PingData.pingdata"));
         } else {
           goto handle_unusual;
         }
@@ -763,9 +769,14 @@ void PingData::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 pingdata = 1;
-  if (this->pingdata() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->pingdata(), output);
+  // string pingdata = 1;
+  if (this->pingdata().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->pingdata().data(), static_cast<int>(this->pingdata().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "masterworker.PingData.pingdata");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->pingdata(), output);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -782,9 +793,15 @@ void PingData::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 pingdata = 1;
-  if (this->pingdata() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->pingdata(), target);
+  // string pingdata = 1;
+  if (this->pingdata().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->pingdata().data(), static_cast<int>(this->pingdata().length()),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "masterworker.PingData.pingdata");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->pingdata(), target);
   }
 
   if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
@@ -804,10 +821,10 @@ size_t PingData::ByteSizeLong() const {
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  // int32 pingdata = 1;
-  if (this->pingdata() != 0) {
+  // string pingdata = 1;
+  if (this->pingdata().size() > 0) {
     total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
+      ::google::protobuf::internal::WireFormatLite::StringSize(
         this->pingdata());
   }
 
@@ -838,8 +855,9 @@ void PingData::MergeFrom(const PingData& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.pingdata() != 0) {
-    set_pingdata(from.pingdata());
+  if (from.pingdata().size() > 0) {
+
+    pingdata_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.pingdata_);
   }
 }
 
@@ -867,7 +885,8 @@ void PingData::Swap(PingData* other) {
 }
 void PingData::InternalSwap(PingData* other) {
   using std::swap;
-  swap(pingdata_, other->pingdata_);
+  pingdata_.Swap(&other->pingdata_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+    GetArenaNoVirtual());
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 

@@ -25,5 +25,5 @@ message Filenames {
 }
 
 message PingData {
-  int32 pingdata = 1;
+  string pingdata = 1;
 }
