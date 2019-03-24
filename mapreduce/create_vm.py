@@ -3,7 +3,7 @@ from user_parameters import *
 
 subprocess_list = []
 mapreduce_node_hostnames = []
-# rm  ~/.ssh/known_hosts
+#rm  ~/.ssh/known_hosts
 subprocess.Popen(["rm", "~/.ssh/known_hosts"]).wait()
 for counter in range(1, number_node + 1):
     print("Creating VM: " + hostname_prefix + str(counter))
