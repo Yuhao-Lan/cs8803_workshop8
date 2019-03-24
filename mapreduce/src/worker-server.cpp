@@ -6,6 +6,7 @@
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
 #include "rpc_generated/master-worker.grpc.pb.h"
+#include "rpc_generated/master-worker.pb.h"
 #include "my_fs.h"
 #include <sys/types.h> 
 #include <sys/wait.h>
