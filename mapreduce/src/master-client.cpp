@@ -89,9 +89,11 @@ void update_worker(vector<string> *worker_hostnames){
   __vct_mtx.unlock();
 
   for(string &hostname: new_workers){
+    cout << "Add ::: new ::: " << hostname << endl;
     add_worker(hostname);
   }
   for(string &hostname: removed_workers){
+    cout << "Delete ::: old ::: " << hostname << endl;
     delete_worker(hostname);
   }
 }
