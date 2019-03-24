@@ -40,31 +40,13 @@ class WorkerServiceImpl final : public Worker::Service {
         string filename = request->filename();
         download(filename, filename);
         //exec
-        //cat ../input_files/big.txt | ./mapper.py | sort | ./reducer.py
+        ostringstream command;
+        command << "cat ";
+        command << filename <<  " | mapper.py > ";
+        //cat ../input_files/big.txt | ./mapper.py > filename.map
         string map_output_file = filename + ".map";
-        int out_fd = open(map_output_file.c_str(), O_RDWR|O_CREAT, 0666);
-        int in_fd = open(filename.c_str(), O_RDONLY);
-
-        pid_t pid = fork();
-        if(pid == -1)
-        {
-          LOG(WARNING) << hostname << ".Mapper(" <<  request->filename() << ") failed";
-          return Status::CANCELLED;
-        }
-        else if (pid == 0)
-        {
-          dup2(in_fd, 0);
-          dup2(out_fd, 1);
-          //const char * loc = "~/mapreduce/mapper.py";
-          //char * const cmd[] = {"./mapper.py", nullptr};
-          const char * loc = "/home/nan/mapreduce/mapper.py";
-          char * const cmd[] = {"mapper.py", nullptr};
-          execvp(loc, cmd);
-        }else{
-          int status;
-          waitpid(pid, &status,0);
-        }
-        
+        command << map_output_file;
+        system(command.str().c_str());
         //upload
         upload(map_output_file, map_output_file);
         response->set_filename(map_output_file);
