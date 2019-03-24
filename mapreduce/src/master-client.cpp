@@ -183,9 +183,10 @@ int main(int argc, char** argv) {
   ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
   framework = factory.newClient("cli-node:2181");
   framework->start();
+  framework->close();
   // init workers, master watch workers
-  vector<string> worker_hostnames = framework->getChildren()->withWatcher(worker_update_fn, &framework)->forPath("/worker");
-  update_worker( &worker_hostnames );
+  //vector<string> worker_hostnames = framework->getChildren()->withWatcher(worker_update_fn, &framework)->forPath("/worker");
+  //update_worker( &worker_hostnames );
   /*
   * 0 = program self
   * 1 = input file
