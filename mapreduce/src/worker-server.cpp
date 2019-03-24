@@ -124,8 +124,8 @@ class WorkerServiceImpl final : public Worker::Service {
   Status Ping(ServerContext* context, 
     const PingData* request, PingData* response) override {
       LOG(INFO) << hostname << ".Ping()";
-      int data = request->data();
-      response->set_data(data);
+      int data = request->pingdata();
+      response->set_pingdata(data);
       return Status::OK;
   }
 
