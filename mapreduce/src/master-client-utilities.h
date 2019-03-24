@@ -51,16 +51,23 @@ class MasterClient {
       return "RPC failed";
     }
   }
+  std::bool Ping() {
+  
+    PingData pingdata;
+    pingdata.set_pingdata("qinnan");
+    PingData return_pingdata;
+    ClientContext context;
+    Status status = stub_->StartReducer(&context, pingdata, &return_pingdata);
+    if (status.ok()) {
+      return true;
+    } else {
+      std::cout << status.error_code() << ": " << status.error_message() << std::endl;
+      return false;
+    }
+  }
  private:
   std::unique_ptr<Worker::Stub> stub_;
 };
 
-/*struct WorkerStruct{
-    string hostname;
-    MasterClient * handle;
-};
-
-int create_client_handles(vector<WorkerStruct> * vct);*/
-int create_client_handles(vector<string> * vct);
 
 #endif // MASTER_CLIENT_U__
