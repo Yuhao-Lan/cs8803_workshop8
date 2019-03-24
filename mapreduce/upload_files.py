@@ -1,6 +1,8 @@
 import subprocess
 from user_parameters import *
 
+#rm  ~/.ssh/known_hosts
+subprocess.Popen(["rm", "~/.ssh/known_hosts"]).wait()
 #mapreduce_node_hostnames should comes from create_vm. 
 mapreduce_node_hostnames = []
 for counter in range(1, number_node + 1):
