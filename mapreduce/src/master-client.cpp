@@ -89,11 +89,11 @@ void update_worker(vector<string> *worker_hostnames){
   __vct_mtx.unlock();
 
   for(string &hostname: new_workers){
-    cout << "Add ::: new ::: " << hostname << endl;
+    // cout << "Add ::: new ::: " << hostname << endl;
     add_worker(hostname);
   }
   for(string &hostname: removed_workers){
-    cout << "Delete ::: old ::: " << hostname << endl;
+    // cout << "Delete ::: old ::: " << hostname << endl;
     delete_worker(hostname);
   }
 }
@@ -190,12 +190,11 @@ int main(int argc, char** argv) {
   // init workers, master watch workers
   vector<string> worker_hostnames = framework->getChildren()->withWatcher(worker_update_fn, &framework)->forPath("/worker");
   update_worker(&worker_hostnames);
-  while(1);
   /*
   * 0 = program self
   * 1 = input file
   */
-  /*if(argc != 2){
+  if(argc != 2){
     cout << "Invlid arguments " << endl;
   }
   // upload input file to blob
@@ -217,7 +216,7 @@ int main(int argc, char** argv) {
   LOG(INFO) << "Master splitted blob file: " << blob_filename << " into " << num_chunk << " chunk";
 
 
-
+  /*
   // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
   thread * mapper_thread = new thread[num_chunk];
   for(int i = 0; i < num_chunk; i++){
