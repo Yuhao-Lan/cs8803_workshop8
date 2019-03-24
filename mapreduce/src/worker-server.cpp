@@ -42,7 +42,7 @@ class WorkerServiceImpl final : public Worker::Service {
         //exec
         ostringstream command;
         command << "cat ";
-        command << filename <<  " | mapper.py > ";
+        command << filename <<  " | ./mapreduce/mapper.py > ";
         //cat ../input_files/big.txt | ./mapper.py > filename.map
         string map_output_file = filename + ".map";
         command << map_output_file;
