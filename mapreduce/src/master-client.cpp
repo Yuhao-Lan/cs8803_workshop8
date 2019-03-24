@@ -41,7 +41,7 @@ void ping_worker_node(string hostname){
         // retry 5 times, if all failed...
         if(count > 5){
           LOG(INFO) << "Ping." << hostname << " Failed....";
-          delete_worker(hostname);
+           delete_worker(hostname);
           return;
         }
     }
