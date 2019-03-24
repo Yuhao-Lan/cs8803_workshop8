@@ -5,11 +5,11 @@
 #include <fstream>
 #include <stdio.h>
 #include "my_fs.h"
-//#include "my_fs_stream.h"
+#include "my_fs.secret.h"
 using namespace std;
 
-extern string connect_string; // = "DefaultEndpointsProtocol=https;AccountName=mapreducestorage123;AccountKey=ofq5oXyrljPqpD/0eNOqAI47BhwXEdgDEPPEKJOKI/yK+hi/6Bi79Z5zr/8CXb3qK/9PnPSFVbb9hn9DTt2jhg==;EndpointSuffix=core.windows.net";
-extern string container_name; // = "mapreduce";
+//extern string connect_string; // = "DefaultEndpointsProtocol=https;AccountName=mapreducestorage123;AccountKey=ofq5oXyrljPqpD/0eNOqAI47BhwXEdgDEPPEKJOKI/yK+hi/6Bi79Z5zr/8CXb3qK/9PnPSFVbb9hn9DTt2jhg==;EndpointSuffix=core.windows.net";
+//extern string container_name; // = "mapreduce";
 int upload(string src_filename, string dest_filename){
     // Define the connection-string with your values.
     const utility::string_t storage_connection_string(U(connect_string));
