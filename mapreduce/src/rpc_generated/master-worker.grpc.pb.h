@@ -52,11 +52,19 @@ class Worker final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::Filename>> PrepareAsyncStartReducer(::grpc::ClientContext* context, const ::masterworker::Filenames& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::Filename>>(PrepareAsyncStartReducerRaw(context, request, cq));
     }
+    virtual ::grpc::Status Ping(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::masterworker::PingData* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::PingData>> AsyncPing(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::PingData>>(AsyncPingRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::PingData>> PrepareAsyncPing(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::PingData>>(PrepareAsyncPingRaw(context, request, cq));
+    }
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
       virtual void StartMapper(::grpc::ClientContext* context, const ::masterworker::Filename* request, ::masterworker::Filename* response, std::function<void(::grpc::Status)>) = 0;
       virtual void StartReducer(::grpc::ClientContext* context, const ::masterworker::Filenames* request, ::masterworker::Filename* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void Ping(::grpc::ClientContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response, std::function<void(::grpc::Status)>) = 0;
     };
     virtual class experimental_async_interface* experimental_async() { return nullptr; }
   private:
@@ -64,6 +72,8 @@ class Worker final {
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::Filename>* PrepareAsyncStartMapperRaw(::grpc::ClientContext* context, const ::masterworker::Filename& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::Filename>* AsyncStartReducerRaw(::grpc::ClientContext* context, const ::masterworker::Filenames& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::Filename>* PrepareAsyncStartReducerRaw(::grpc::ClientContext* context, const ::masterworker::Filenames& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::PingData>* AsyncPingRaw(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::masterworker::PingData>* PrepareAsyncPingRaw(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
@@ -82,11 +92,19 @@ class Worker final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::masterworker::Filename>> PrepareAsyncStartReducer(::grpc::ClientContext* context, const ::masterworker::Filenames& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::masterworker::Filename>>(PrepareAsyncStartReducerRaw(context, request, cq));
     }
+    ::grpc::Status Ping(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::masterworker::PingData* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::masterworker::PingData>> AsyncPing(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::masterworker::PingData>>(AsyncPingRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::masterworker::PingData>> PrepareAsyncPing(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::masterworker::PingData>>(PrepareAsyncPingRaw(context, request, cq));
+    }
     class experimental_async final :
       public StubInterface::experimental_async_interface {
      public:
       void StartMapper(::grpc::ClientContext* context, const ::masterworker::Filename* request, ::masterworker::Filename* response, std::function<void(::grpc::Status)>) override;
       void StartReducer(::grpc::ClientContext* context, const ::masterworker::Filenames* request, ::masterworker::Filename* response, std::function<void(::grpc::Status)>) override;
+      void Ping(::grpc::ClientContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response, std::function<void(::grpc::Status)>) override;
      private:
       friend class Stub;
       explicit experimental_async(Stub* stub): stub_(stub) { }
@@ -102,8 +120,11 @@ class Worker final {
     ::grpc::ClientAsyncResponseReader< ::masterworker::Filename>* PrepareAsyncStartMapperRaw(::grpc::ClientContext* context, const ::masterworker::Filename& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::masterworker::Filename>* AsyncStartReducerRaw(::grpc::ClientContext* context, const ::masterworker::Filenames& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::masterworker::Filename>* PrepareAsyncStartReducerRaw(::grpc::ClientContext* context, const ::masterworker::Filenames& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::masterworker::PingData>* AsyncPingRaw(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::masterworker::PingData>* PrepareAsyncPingRaw(::grpc::ClientContext* context, const ::masterworker::PingData& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_StartMapper_;
     const ::grpc::internal::RpcMethod rpcmethod_StartReducer_;
+    const ::grpc::internal::RpcMethod rpcmethod_Ping_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -113,6 +134,7 @@ class Worker final {
     virtual ~Service();
     virtual ::grpc::Status StartMapper(::grpc::ServerContext* context, const ::masterworker::Filename* request, ::masterworker::Filename* response);
     virtual ::grpc::Status StartReducer(::grpc::ServerContext* context, const ::masterworker::Filenames* request, ::masterworker::Filename* response);
+    virtual ::grpc::Status Ping(::grpc::ServerContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_StartMapper : public BaseClass {
@@ -154,7 +176,27 @@ class Worker final {
       ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_StartMapper<WithAsyncMethod_StartReducer<Service > > AsyncService;
+  template <class BaseClass>
+  class WithAsyncMethod_Ping : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_Ping() {
+      ::grpc::Service::MarkMethodAsync(2);
+    }
+    ~WithAsyncMethod_Ping() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status Ping(::grpc::ServerContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestPing(::grpc::ServerContext* context, ::masterworker::PingData* request, ::grpc::ServerAsyncResponseWriter< ::masterworker::PingData>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_StartMapper<WithAsyncMethod_StartReducer<WithAsyncMethod_Ping<Service > > > AsyncService;
   template <class BaseClass>
   class ExperimentalWithCallbackMethod_StartMapper : public BaseClass {
    private:
@@ -205,7 +247,32 @@ class Worker final {
     }
     virtual void StartReducer(::grpc::ServerContext* context, const ::masterworker::Filenames* request, ::masterworker::Filename* response, ::grpc::experimental::ServerCallbackRpcController* controller) { controller->Finish(::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "")); }
   };
-  typedef ExperimentalWithCallbackMethod_StartMapper<ExperimentalWithCallbackMethod_StartReducer<Service > > ExperimentalCallbackService;
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_Ping : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    ExperimentalWithCallbackMethod_Ping() {
+      ::grpc::Service::experimental().MarkMethodCallback(2,
+        new ::grpc::internal::CallbackUnaryHandler< ::masterworker::PingData, ::masterworker::PingData>(
+          [this](::grpc::ServerContext* context,
+                 const ::masterworker::PingData* request,
+                 ::masterworker::PingData* response,
+                 ::grpc::experimental::ServerCallbackRpcController* controller) {
+                   return this->Ping(context, request, response, controller);
+                 }));
+    }
+    ~ExperimentalWithCallbackMethod_Ping() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status Ping(::grpc::ServerContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual void Ping(::grpc::ServerContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response, ::grpc::experimental::ServerCallbackRpcController* controller) { controller->Finish(::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "")); }
+  };
+  typedef ExperimentalWithCallbackMethod_StartMapper<ExperimentalWithCallbackMethod_StartReducer<ExperimentalWithCallbackMethod_Ping<Service > > > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_StartMapper : public BaseClass {
    private:
@@ -236,6 +303,23 @@ class Worker final {
     }
     // disable synchronous version of this method
     ::grpc::Status StartReducer(::grpc::ServerContext* context, const ::masterworker::Filenames* request, ::masterworker::Filename* response) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_Ping : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_Ping() {
+      ::grpc::Service::MarkMethodGeneric(2);
+    }
+    ~WithGenericMethod_Ping() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status Ping(::grpc::ServerContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -278,6 +362,26 @@ class Worker final {
     }
     void RequestStartReducer(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_Ping : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithRawMethod_Ping() {
+      ::grpc::Service::MarkMethodRaw(2);
+    }
+    ~WithRawMethod_Ping() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status Ping(::grpc::ServerContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestPing(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -331,6 +435,31 @@ class Worker final {
     virtual void StartReducer(::grpc::ServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response, ::grpc::experimental::ServerCallbackRpcController* controller) { controller->Finish(::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "")); }
   };
   template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_Ping : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    ExperimentalWithRawCallbackMethod_Ping() {
+      ::grpc::Service::experimental().MarkMethodRawCallback(2,
+        new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          [this](::grpc::ServerContext* context,
+                 const ::grpc::ByteBuffer* request,
+                 ::grpc::ByteBuffer* response,
+                 ::grpc::experimental::ServerCallbackRpcController* controller) {
+                   this->Ping(context, request, response, controller);
+                 }));
+    }
+    ~ExperimentalWithRawCallbackMethod_Ping() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status Ping(::grpc::ServerContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual void Ping(::grpc::ServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response, ::grpc::experimental::ServerCallbackRpcController* controller) { controller->Finish(::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "")); }
+  };
+  template <class BaseClass>
   class WithStreamedUnaryMethod_StartMapper : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
@@ -370,9 +499,29 @@ class Worker final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedStartReducer(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::masterworker::Filenames,::masterworker::Filename>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_StartMapper<WithStreamedUnaryMethod_StartReducer<Service > > StreamedUnaryService;
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_Ping : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithStreamedUnaryMethod_Ping() {
+      ::grpc::Service::MarkMethodStreamed(2,
+        new ::grpc::internal::StreamedUnaryHandler< ::masterworker::PingData, ::masterworker::PingData>(std::bind(&WithStreamedUnaryMethod_Ping<BaseClass>::StreamedPing, this, std::placeholders::_1, std::placeholders::_2)));
+    }
+    ~WithStreamedUnaryMethod_Ping() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status Ping(::grpc::ServerContext* context, const ::masterworker::PingData* request, ::masterworker::PingData* response) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedPing(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::masterworker::PingData,::masterworker::PingData>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_StartMapper<WithStreamedUnaryMethod_StartReducer<WithStreamedUnaryMethod_Ping<Service > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_StartMapper<WithStreamedUnaryMethod_StartReducer<Service > > StreamedService;
+  typedef WithStreamedUnaryMethod_StartMapper<WithStreamedUnaryMethod_StartReducer<WithStreamedUnaryMethod_Ping<Service > > > StreamedService;
 };
 
 }  // namespace masterworker

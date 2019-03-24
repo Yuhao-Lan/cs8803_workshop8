@@ -38,7 +38,7 @@ namespace protobuf_master_2dworker_2eproto {
 struct TableStruct {
   static const ::google::protobuf::internal::ParseTableField entries[];
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[];
-  static const ::google::protobuf::internal::ParseTable schema[2];
+  static const ::google::protobuf::internal::ParseTable schema[3];
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
   static const ::google::protobuf::uint32 offsets[];
@@ -52,11 +52,15 @@ extern FilenameDefaultTypeInternal _Filename_default_instance_;
 class Filenames;
 class FilenamesDefaultTypeInternal;
 extern FilenamesDefaultTypeInternal _Filenames_default_instance_;
+class PingData;
+class PingDataDefaultTypeInternal;
+extern PingDataDefaultTypeInternal _PingData_default_instance_;
 }  // namespace masterworker
 namespace google {
 namespace protobuf {
 template<> ::masterworker::Filename* Arena::CreateMaybeMessage<::masterworker::Filename>(Arena*);
 template<> ::masterworker::Filenames* Arena::CreateMaybeMessage<::masterworker::Filenames>(Arena*);
+template<> ::masterworker::PingData* Arena::CreateMaybeMessage<::masterworker::PingData>(Arena*);
 }  // namespace protobuf
 }  // namespace google
 namespace masterworker {
@@ -283,6 +287,109 @@ class Filenames : public ::google::protobuf::Message /* @@protoc_insertion_point
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_master_2dworker_2eproto::TableStruct;
 };
+// -------------------------------------------------------------------
+
+class PingData : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:masterworker.PingData) */ {
+ public:
+  PingData();
+  virtual ~PingData();
+
+  PingData(const PingData& from);
+
+  inline PingData& operator=(const PingData& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  PingData(PingData&& from) noexcept
+    : PingData() {
+    *this = ::std::move(from);
+  }
+
+  inline PingData& operator=(PingData&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PingData& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const PingData* internal_default_instance() {
+    return reinterpret_cast<const PingData*>(
+               &_PingData_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  void Swap(PingData* other);
+  friend void swap(PingData& a, PingData& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PingData* New() const final {
+    return CreateMaybeMessage<PingData>(NULL);
+  }
+
+  PingData* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<PingData>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const PingData& from);
+  void MergeFrom(const PingData& from);
+  void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      bool deterministic, ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PingData* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return NULL;
+  }
+  inline void* MaybeArenaPtr() const {
+    return NULL;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // int32 data = 1;
+  void clear_data();
+  static const int kDataFieldNumber = 1;
+  ::google::protobuf::int32 data() const;
+  void set_data(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:masterworker.PingData)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::int32 data_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::protobuf_master_2dworker_2eproto::TableStruct;
+};
 // ===================================================================
 
 
@@ -404,9 +511,29 @@ inline void Filenames::set_allocated_filenames(::std::string* filenames) {
   // @@protoc_insertion_point(field_set_allocated:masterworker.Filenames.filenames)
 }
 
+// -------------------------------------------------------------------
+
+// PingData
+
+// int32 data = 1;
+inline void PingData::clear_data() {
+  data_ = 0;
+}
+inline ::google::protobuf::int32 PingData::data() const {
+  // @@protoc_insertion_point(field_get:masterworker.PingData.data)
+  return data_;
+}
+inline void PingData::set_data(::google::protobuf::int32 value) {
+  
+  data_ = value;
+  // @@protoc_insertion_point(field_set:masterworker.PingData.data)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 

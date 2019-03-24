@@ -30,6 +30,11 @@ class FilenamesDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<Filenames>
       _instance;
 } _Filenames_default_instance_;
+class PingDataDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<PingData>
+      _instance;
+} _PingData_default_instance_;
 }  // namespace masterworker
 namespace protobuf_master_2dworker_2eproto {
 static void InitDefaultsFilename() {
@@ -60,12 +65,27 @@ static void InitDefaultsFilenames() {
 ::google::protobuf::internal::SCCInfo<0> scc_info_Filenames =
     {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsFilenames}, {}};
 
+static void InitDefaultsPingData() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::masterworker::_PingData_default_instance_;
+    new (ptr) ::masterworker::PingData();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::masterworker::PingData::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_PingData =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsPingData}, {}};
+
 void InitDefaults() {
   ::google::protobuf::internal::InitSCC(&scc_info_Filename.base);
   ::google::protobuf::internal::InitSCC(&scc_info_Filenames.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_PingData.base);
 }
 
-::google::protobuf::Metadata file_level_metadata[2];
+::google::protobuf::Metadata file_level_metadata[3];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
@@ -80,15 +100,23 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::masterworker::Filenames, filenames_),
+  ~0u,  // no _has_bits_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::masterworker::PingData, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::masterworker::PingData, data_),
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::masterworker::Filename)},
   { 6, -1, sizeof(::masterworker::Filenames)},
+  { 12, -1, sizeof(::masterworker::PingData)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::google::protobuf::Message*>(&::masterworker::_Filename_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::masterworker::_Filenames_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::masterworker::_PingData_default_instance_),
 };
 
 void protobuf_AssignDescriptors() {
@@ -106,7 +134,7 @@ void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) GOOGLE_PROTOBUF_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 2);
+  ::google::protobuf::internal::RegisterAllTypes(file_level_metadata, 3);
 }
 
 void AddDescriptorsImpl() {
@@ -114,15 +142,17 @@ void AddDescriptorsImpl() {
   static const char descriptor[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
       "\n\023master-worker.proto\022\014masterworker\"\034\n\010F"
       "ilename\022\020\n\010filename\030\001 \001(\t\"\036\n\tFilenames\022\021"
-      "\n\tfilenames\030\001 \001(\t2\214\001\n\006Worker\022\?\n\013StartMap"
-      "per\022\026.masterworker.Filename\032\026.masterwork"
-      "er.Filename\"\000\022A\n\014StartReducer\022\027.masterwo"
-      "rker.Filenames\032\026.masterworker.Filename\"\000"
-      "B6\n\033io.grpc.examples.helloworldB\017HelloWo"
-      "rldProtoP\001\242\002\003HLWb\006proto3"
+      "\n\tfilenames\030\001 \001(\t\"\030\n\010PingData\022\014\n\004data\030\001 "
+      "\001(\0052\306\001\n\006Worker\022\?\n\013StartMapper\022\026.masterwo"
+      "rker.Filename\032\026.masterworker.Filename\"\000\022"
+      "A\n\014StartReducer\022\027.masterworker.Filenames"
+      "\032\026.masterworker.Filename\"\000\0228\n\004Ping\022\026.mas"
+      "terworker.PingData\032\026.masterworker.PingDa"
+      "ta\"\000B6\n\033io.grpc.examples.helloworldB\017Hel"
+      "loWorldProtoP\001\242\002\003HLWb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 304);
+      descriptor, 388);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "master-worker.proto", &protobuf_RegisterTypes);
 }
@@ -624,6 +654,229 @@ void Filenames::InternalSwap(Filenames* other) {
 }
 
 
+// ===================================================================
+
+void PingData::InitAsDefaultInstance() {
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int PingData::kDataFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+PingData::PingData()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  ::google::protobuf::internal::InitSCC(
+      &protobuf_master_2dworker_2eproto::scc_info_PingData.base);
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:masterworker.PingData)
+}
+PingData::PingData(const PingData& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(NULL) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  data_ = from.data_;
+  // @@protoc_insertion_point(copy_constructor:masterworker.PingData)
+}
+
+void PingData::SharedCtor() {
+  data_ = 0;
+}
+
+PingData::~PingData() {
+  // @@protoc_insertion_point(destructor:masterworker.PingData)
+  SharedDtor();
+}
+
+void PingData::SharedDtor() {
+}
+
+void PingData::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const ::google::protobuf::Descriptor* PingData::descriptor() {
+  ::protobuf_master_2dworker_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_master_2dworker_2eproto::file_level_metadata[kIndexInFileMessages].descriptor;
+}
+
+const PingData& PingData::default_instance() {
+  ::google::protobuf::internal::InitSCC(&protobuf_master_2dworker_2eproto::scc_info_PingData.base);
+  return *internal_default_instance();
+}
+
+
+void PingData::Clear() {
+// @@protoc_insertion_point(message_clear_start:masterworker.PingData)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  data_ = 0;
+  _internal_metadata_.Clear();
+}
+
+bool PingData::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:masterworker.PingData)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // int32 data = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &data_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:masterworker.PingData)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:masterworker.PingData)
+  return false;
+#undef DO_
+}
+
+void PingData::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:masterworker.PingData)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int32 data = 1;
+  if (this->data() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->data(), output);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
+  }
+  // @@protoc_insertion_point(serialize_end:masterworker.PingData)
+}
+
+::google::protobuf::uint8* PingData::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:masterworker.PingData)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int32 data = 1;
+  if (this->data() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->data(), target);
+  }
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:masterworker.PingData)
+  return target;
+}
+
+size_t PingData::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:masterworker.PingData)
+  size_t total_size = 0;
+
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
+  }
+  // int32 data = 1;
+  if (this->data() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->data());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void PingData::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:masterworker.PingData)
+  GOOGLE_DCHECK_NE(&from, this);
+  const PingData* source =
+      ::google::protobuf::internal::DynamicCastToGenerated<const PingData>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:masterworker.PingData)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:masterworker.PingData)
+    MergeFrom(*source);
+  }
+}
+
+void PingData::MergeFrom(const PingData& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:masterworker.PingData)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.data() != 0) {
+    set_data(from.data());
+  }
+}
+
+void PingData::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:masterworker.PingData)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void PingData::CopyFrom(const PingData& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:masterworker.PingData)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool PingData::IsInitialized() const {
+  return true;
+}
+
+void PingData::Swap(PingData* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void PingData::InternalSwap(PingData* other) {
+  using std::swap;
+  swap(data_, other->data_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+}
+
+::google::protobuf::Metadata PingData::GetMetadata() const {
+  protobuf_master_2dworker_2eproto::protobuf_AssignDescriptorsOnce();
+  return ::protobuf_master_2dworker_2eproto::file_level_metadata[kIndexInFileMessages];
+}
+
+
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace masterworker
 namespace google {
@@ -633,6 +886,9 @@ template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::masterworker::Filename* Arena::C
 }
 template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::masterworker::Filenames* Arena::CreateMaybeMessage< ::masterworker::Filenames >(Arena* arena) {
   return Arena::CreateInternal< ::masterworker::Filenames >(arena);
+}
+template<> GOOGLE_PROTOBUF_ATTRIBUTE_NOINLINE ::masterworker::PingData* Arena::CreateMaybeMessage< ::masterworker::PingData >(Arena* arena) {
+  return Arena::CreateInternal< ::masterworker::PingData >(arena);
 }
 }  // namespace protobuf
 }  // namespace google
