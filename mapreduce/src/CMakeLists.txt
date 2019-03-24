@@ -20,9 +20,9 @@ find_package(AzureStorageCpp REQUIRED)
 find_package(SSL REQUIRED)
 find_package(glog REQUIRED)
 
-#find_package(Threads REQUIRED)
+find_package(Threads REQUIRED)
 find_package(Zookeeper REQUIRED)
-#find_package(Check REQUIRED)
+find_package(Check REQUIRED)
 find_package(Conservator REQUIRED)
 find_package(Protobuf REQUIRED)
 
