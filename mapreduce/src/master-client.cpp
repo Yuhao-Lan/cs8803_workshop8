@@ -38,8 +38,9 @@ void ping_worker_node(string hostname){
         }else{
           count++;
         }
-        if(count > 8){
-          LOG(INFO) << "Ping." << hostname << "Failed....";
+        // retry 5 times, if all failed...
+        if(count > 5){
+          LOG(INFO) << "Ping." << hostname << " Failed....";
           delete_worker(hostname);
           return;
         }
@@ -117,9 +118,9 @@ void worker_update_fn(zhandle_t *zh, int type,
     
     /*ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
     unique_ptr<ConservatorFramework> framework = factory.newClient("cli-node:2181");
-    framework->start();
+    framework->start();*/
     vector<string> worker_hostnames = framework->getChildren()->withWatcher(worker_update_fn, &framework)->forPath("/worker");
-    update_worker( &worker_hostnames );*/
+    update_worker( &worker_hostnames );
     
 }
 
