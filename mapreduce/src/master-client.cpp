@@ -109,6 +109,7 @@ string get_next_worker_hostname(){
     return __hostname;
 }
 
+//////////////// watch worker updated ///////////////////////////////
 void worker_update_fn(zhandle_t *zh, int type,
                     int state, const char *path,void *watcherCtx) {
     cout << "new worker updated" << endl;
@@ -126,18 +127,29 @@ void worker_update_fn(zhandle_t *zh, int type,
     
 }
 
+///////////////// watch leader /////////////////////////
+void watch_leader(zhandle_t *zh, int type,
+                             int state, const char *path,void *watcherCtx) {
+    leader_election(); // re-run leader election
+}
+////////////////// job status //////////////////////////
+void job_status_watcher_fn(zhandle_t *zh, int type,
+                       int state, const char *path,void *watcherCtx) {
+    follower_listen(); // re-run listen
+}
 
 ////////////////////////// Mapper /////////////////////
 
-string mappers_outputs = "";
-mutex mappers_outputs_mtx;
 
 void start_mapper(string file_chunk){
-  string output_file = "";
+  string output_file = file_chunk + ".map";
+  // check if the output_file existed in jobdata znode, if does, then done
+
+
+
   string worker_hostname = "";
   //
   while(1){
-
     worker_hostname = get_next_worker_hostname();
     //next_client_mtx.unlock();
     MasterClient cli(grpc::CreateChannel(worker_hostname + ":50051", grpc::InsecureChannelCredentials()));
@@ -151,13 +163,7 @@ void start_mapper(string file_chunk){
     }
   }
   LOG(INFO) << worker_hostname << ".StartMapper(" << file_chunk << ") => " << output_file; 
-  mappers_outputs_mtx.lock();
-  if(mappers_outputs == ""){
-    mappers_outputs = output_file;
-  }else{
-    mappers_outputs = mappers_outputs + ";" + output_file;
-  }
-  mappers_outputs_mtx.unlock();
+
 }
 
 
@@ -180,61 +186,175 @@ void start_reducer(string filenames){
   LOG(INFO) << worker_hostname << ".StartReducer(" << filenames << ") => " << output_file; 
 }
 
+///////////////////////// Leader ///////////////////////////////
 
-int main(int argc, char** argv) {
-  // connect to local zookeeper server
-  ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
-  framework = factory.newClient("cli-node:2181");
-  framework->start();
-  //framework->close();
-  // init workers, master watch workers
+int is_leader = 0;
+string job_status = "init"; 
+string job_data = "";
+int num_chunk = 0;
+
+
+string job_status_convert_to_string(int job_status){
+  switch(job_status){
+    case 0: return "init";
+    case 1: return "uploaded";
+    case 2: return "splitted";
+    case 3: return "mapping";
+    case 4: return "mapped";
+    case 5: return "reduced";
+    default: return "none";
+  }
+}
+
+int job_status_convert_to_int(string job_status){
+  if(job_status == "init"){
+    return 0;
+  }else if(job_status == "uploaded"){
+    return 1;
+  }else if(job_status == "splitted"){
+    return 2;
+  }else if(job_status == "mapping"){
+    return 3;
+  }else if(job_status == "mapped"){
+    return 4;
+  }else if(job_status == "reduced"){
+    return 5;
+  }
+  return -1;
+}
+
+
+
+string blob_filename;
+string local_filename;
+
+
+void start_leader(){
+  LOG(INFO) << "Main.watch_workers.ping ....";
   vector<string> worker_hostnames = framework->getChildren()->withWatcher(worker_update_fn, &framework)->forPath("/worker");
   update_worker(&worker_hostnames);
-  /*
-  * 0 = program self
-  * 1 = input file
-  */
-  if(argc != 2){
-    cout << "Invlid arguments " << endl;
+
+  switch(job_status_convert_to_int(job_status)){
+    case 0:{
+      // init
+      LOG(INFO) << "Leader.upload(" <<  local_filename << "): " << blob_filename;
+      upload(local_filename, blob_filename);
+      string __job_status = "uploaded";
+      framework->setData()->forPath("/jobstatus", __job_status.c_str());
+      job_status = __job_status;
+    };
+    case 1:{
+      // uploaded
+      LOG(INFO) << "Leader.split(" << blob_filename << ")";
+      num_chunk = split(blob_filename, 1024);
+      string __job_status = "splitted";
+      string __job_data = to_string(num_chunk);
+      framework->setData()->forPath("/jobstatus", __job_status.c_str());
+      framework->setData()->forPath("/jobdata", __job_data.c_str());
+      job_status = __job_status;
+      job_data = __job_data;
+    }
+    case 2:
+    case 3:{
+      // splitted, mapping
+      LOG(INFO) << "Leader.startMapper";
+      string __job_status = "mapping";
+      string __job_data = "";
+      framework->setData()->forPath("/jobstatus", __job_status.c_str());
+      framework->setData()->forPath("/jobdata", __job_data.c_str());
+      job_status = __job_status;
+      job_data = __job_data;
+      // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
+      string __num_chunk = framework->getData()->forPath("/jobdata");
+      num_chunk = stoi(__num_chunk);
+      thread * mapper_thread = new thread[num_chunk];
+      for(int i = 0; i < num_chunk; i++){
+        mapper_thread[i] = thread(start_mapper, blob_filename + "." + to_string(i+1));
+      }
+      // wait all N pthreds to finish, and start reducers
+      for(int i = 0; i < num_chunk; i++){
+        mapper_thread[i].join();
+      }
+      string __job_status = "mapped";
+      framework->setData()->forPath("/jobstatus", __job_status.c_str());
+      job_status = __job_status;
+    }
+    case 4:{
+      // mapped
+      string mappers_outputs = framework->getData()->forPath("/jobdata");
+      LOG(INFO) << "Leader.startReducer(" << mappers_outputs << ")";
+      start_reducer(mappers_outputs);
+      string __job_status = "reduced";
+      string __job_data = "";
+      framework->setData()->forPath("/jobstatus", __job_status.c_str());
+      framework->setData()->forPath("/jobdata", __job_data.c_str());
+      job_status = __job_status;
+      job_data = __job_data;
+    }
   }
-  // upload input file to blob
-  string str(argv[1]);
-  //string workers(argv[2]);
-  size_t found = str.find_last_of("/");
-  string blob_filename;
-  if(found == string::npos) {
-    blob_filename = str;
+}
+
+////////////////////////// Leader Election /////////////////////
+
+
+void leader_election(){
+  LOG(INFO) << "Main.leader_election ....";
+  // try to create parent directory /master and node
+  char cstr_hostname[HOSTNAME_MAX_LEN];
+  if(gethostname(cstr_hostname, HOSTNAME_MAX_LEN) != 0){
+    LOG(INFO) << << "Error: Cannot get hostname";
+    return 0;
+  }
+  string hostname = string(cstr_hostname);
+  framework->create()->forPath("/master", (char *) "master-nodes");
+  string nodename = "/master/leader";
+  if(framework->create()->withFlags(ZOO_EPHEMERAL)->forPath(nodename, hostname.c_str()) != 0){
+    LOG(INFO) << "Main." << hostname << ".Acting as leader ...";
+    is_leader = 1;
+    start_leader();
   }else{
-    blob_filename = str.substr(found+1);
+    LOG(INFO) << "Main." << hostname << ".Acting as follower ...";
+    is_leader = 0;
+    // watch leader
+    framework->checkExists()->withWatcher(watch_leader, framework)->forPath("/master/leader");
+    return;
   }
-  
-  LOG(INFO) << "Master is uploading input file: " <<  str << " to blob " << blob_filename;
-  upload(str, blob_filename);
-  // split input file into N chunks
-  LOG(INFO) << "Master is splitting blob file: " << blob_filename;
-  int num_chunk = split(blob_filename, 1024);
-  LOG(INFO) << "Master splitted blob file: " << blob_filename << " into " << num_chunk << " chunk";
+}
 
-
-  /*
-  // start N pthreads, each thread selects a client based on round robin, and then calls cli.startmapper();
-  thread * mapper_thread = new thread[num_chunk];
-  for(int i = 0; i < num_chunk; i++){
-    mapper_thread[i] = thread(start_mapper, blob_filename + "." + to_string(i+1));
+void follower_listen(){
+  if(is_leader == 1){
+    return;
   }
-  // wait all N pthreds to finish, and start reducers
-  for(int i = 0; i < num_chunk; i++){
-    mapper_thread[i].join();
-  }
+  job_status = framework->getData()->withWatcher(job_status_watcher_fn, framework)->forPath("/jobstatus");
+}
 
-  start_reducer(mappers_outputs);
-  cout << "All done " << endl;
-  
-  
-  //MasterClient cli(grpc::CreateChannel("map-reduce-node-1:50051", grpc::InsecureChannelCredentials()));
-  //std::string input_filename("world.txt");
-  //std::string output_filename = cli.StartMapper(input_filename);
-  //std::cout << "Worker received: " << output_filename << std::endl;*/
 
-  return 0;
+int main(int argc, char** argv) {
+   //0 = program self,  1 = input file
+    if(argc != 2){
+      LOG(INFO) << "Main.Failed.Invalid Input Arguments ....";
+      return;
+    }
+    // upload input file to blob
+    string str(argv[1]);
+    //string workers(argv[2]);
+    size_t found = str.find_last_of("/");
+    
+    if(found == string::npos) {
+      blob_filename = str;
+    }else{
+      blob_filename = str.substr(found+1);
+    }
+    local_filename = str;
+
+    // connect to local zookeeper server
+    ConservatorFrameworkFactory factory = ConservatorFrameworkFactory();
+    framework = factory.newClient("cli-node:2181");
+    framework->start();
+    framework->create()->forPath("/master", (char *) "master-nodes");
+    framework->create()->forPath("/jobstatus", job_status.c_str());
+    framework->create()->forPath("/jobdata", job_data.c_str());
+    leader_election();
+    follower_listen();
+    return 0;
 }
