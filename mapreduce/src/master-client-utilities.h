@@ -16,6 +16,7 @@ using grpc::Status;
 using masterworker::Filename;
 using masterworker::Filenames;
 using masterworker::Worker;
+using masterworker::PingData;
 using namespace std;
 class MasterClient {
  public:
