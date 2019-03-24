@@ -13,6 +13,7 @@ service Worker {
   
   rpc StartMapper (Filename) returns (Filename) {}
   rpc StartReducer (Filenames) returns (Filename) {}
+  rpc Ping (PingData) returns (PingData) {}
 }
 
 message Filename {
@@ -21,4 +22,8 @@ message Filename {
 
 message Filenames {
   string filenames = 1;
+}
+
+message PingData {
+  int32 data = 1;
 }
