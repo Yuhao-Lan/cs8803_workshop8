@@ -28,6 +28,7 @@ using grpc::Status;
 using masterworker::Filenames;
 using masterworker::Filename;
 using masterworker::Worker;
+using masterworker::PingData;
 string hostname = "";
 // Logic and data behind the server's behavior.
 class WorkerServiceImpl final : public Worker::Service {
