@@ -51,8 +51,7 @@ class MasterClient {
       return "RPC failed";
     }
   }
-  std::bool Ping() {
-  
+  bool Ping() {
     PingData pingdata;
     pingdata.set_pingdata("qinnan");
     PingData return_pingdata;
