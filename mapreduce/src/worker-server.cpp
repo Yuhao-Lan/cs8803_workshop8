@@ -51,8 +51,6 @@ class WorkerServiceImpl final : public Worker::Service {
         upload(map_output_file, map_output_file);
         response->set_filename(map_output_file);
         LOG(INFO) << "The mapper is done with output file: " << map_output_file;
-        close(out_fd);
-        close(in_fd);
         return Status::OK;
   }
 
@@ -123,7 +121,6 @@ void NotifyZookeeper() {
     
     if(gethostname(cstr_hostname, HOSTNAME_MAX_LEN) != 0){
         cout << "Error: Cannot get hostname" << endl;
-        return 0;
     }
     string hostname = string(cstr_hostname);
     
