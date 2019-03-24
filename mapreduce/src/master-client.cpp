@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <map>
+#include <vector>
 #include <grpc++/grpc++.h>
 #include <glog/logging.h>
 #include <glog/raw_logging.h>
@@ -11,26 +13,66 @@
 #include <conservator/ConservatorFrameworkFactory.h>
 #include <zookeeper/zookeeper.h>
 using namespace std;
+//////// declaration ///////////
+void ping_worker_node(string hostname);
+void add_worker(string worker_hostname);
+void delete_worker(string worker_hostname);
+
 
 unique_ptr<ConservatorFramework> framework;
 //////////////////////// Vector keeps track of workers /////////////////
 
 static int __counter = 0;
 vector<string> __vct;
+map<string, thread *> ping_threads; 
 mutex __vct_mtx;
 
-/* For each worker, start a pthread to do ping */
-void update_worker(vector<string> * worker_hostnames){
-  __vct_mtx.lock();
-  __vct.clear();
-  for (string& hostname : *worker_hostnames) {
-        __vct.push_back(hostname);
+void ping_worker_node(string hostname){
+    LOG(INFO) << "....Ping." << hostname; 
+    int count = 0;
+    while(1){
+        MasterClient cli(grpc::CreateChannel(hostname + ":50051", grpc::InsecureChannelCredentials()));
+        this_thread::sleep_for(chrono::seconds(2));
+        output_file = cli.Ping();
+        if(cli.Ping()){
+          count = 0;
+        }else{
+          count++;
+        }
+        if(count > 8){
+          LOG(INFO) << "Ping." << hostname << "Failed....";
+          delete_worker(hostname);
+          return;
+        }
     }
+}
+/* Add worker */
+void add_worker(string worker_hostname){
+  __vct_mtx.lock();
+  __vct.push_back(worker_hostname);
+  thread * ping_thread = new thread(ping_worker_node, worker_hostname);
+  ping_threads.insert(pair<string, thread *>(worker_hostname, ping_thread));
+  __vct_mtx.unlock();
+}
+/* Delete worker */
+void delete_worker(string worker_hostname){
+  __vct_mtx.lock();
+  vector<string>::iterator it = find(__vct.begin(), __vct.end(), worker_hostname);
+  if(it != __vct.end()){  
+    __vct.erase(it);
+    ping_threads.erase(worker_hostname);
+  }
   __vct_mtx.unlock();
 }
 
-string get_next_worker_hostname(){
+/* For each worker, start a pthread to do ping */
+void update_worker(vector<string> * worker_hostnames){
+  for (string& hostname : *worker_hostnames) {
+    add_worker(hostname);  
+  }
+}
 
+string get_next_worker_hostname(){
     __vct_mtx.lock();
     if(__counter >= __vct.size()){
       __counter = 0;
