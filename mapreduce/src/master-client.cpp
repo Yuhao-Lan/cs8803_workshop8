@@ -263,7 +263,7 @@ void start_leader(){
       job_status = __job_status;
       job_data = __job_data;
     }
-    case 2:
+    /*case 2:
     case 3:{
       // splitted, mapping
       LOG(INFO) << "Leader.startMapper";
@@ -299,6 +299,9 @@ void start_leader(){
       framework->setData()->forPath("/jobdata", __job_data.c_str());
       job_status = __job_status;
       job_data = __job_data;
+    }*/
+    default: {
+
     }
   }
 }
