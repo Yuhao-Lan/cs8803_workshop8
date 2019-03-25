@@ -325,7 +325,7 @@ void leader_election(){
     LOG(INFO) << "Main." << hostname << ".Acting as follower ...";
     is_leader = 0;
     // watch leader
-    framework->checkExists()->withWatcher(watch_leader, framework)->forPath("/master/leader");
+    framework->checkExists()->withWatcher(watch_leader, &framework)->forPath("/master/leader");
     return;
   }
 }
@@ -334,7 +334,7 @@ void follower_listen(){
   if(is_leader == 1){
     return;
   }
-  job_status = framework->getData()->withWatcher(job_status_watcher_fn, framework)->forPath("/jobstatus");
+  job_status = framework->getData()->withWatcher(job_status_watcher_fn, &framework)->forPath("/jobstatus");
 }
 
 
