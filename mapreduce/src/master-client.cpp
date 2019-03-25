@@ -342,7 +342,7 @@ int main(int argc, char** argv) {
    //0 = program self,  1 = input file
     if(argc != 2){
       LOG(INFO) << "Main.Failed.Invalid Input Arguments ....";
-      return;
+      return 0;
     }
     // upload input file to blob
     string str(argv[1]);
