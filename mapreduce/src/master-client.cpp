@@ -320,7 +320,7 @@ void leader_election(){
   string hostname = string(cstr_hostname);
   framework->create()->forPath("/master", (char *) "master-nodes");
   string nodename = "/master/leader";
-  if(framework->create()->withFlags(ZOO_EPHEMERAL)->forPath(nodename, hostname.c_str()) != 0){
+  if(framework->create()->withFlags(ZOO_EPHEMERAL)->forPath(nodename, hostname.c_str()) == ZOK){
     LOG(INFO) << "Main." << hostname << ".Acting as leader ...";
     is_leader = 1;
     start_leader();
@@ -368,5 +368,6 @@ int main(int argc, char** argv) {
     framework->create()->forPath("/jobdata", job_data.c_str());
     leader_election();
     follower_listen();
+    framework->close();
     return 0;
 }
