@@ -13,6 +13,7 @@
 #include <conservator/ConservatorFrameworkFactory.h>
 #include <zookeeper/zookeeper.h>
 using namespace std;
+#define HOSTNAME_MAX_LEN 128
 //////// declaration ///////////
 void ping_worker_node(string hostname);
 void add_worker(string worker_hostname);
@@ -128,6 +129,11 @@ void worker_update_fn(zhandle_t *zh, int type,
 }
 
 ///////////////// watch leader /////////////////////////
+void leader_election();
+void follower_listen();
+
+
+
 void watch_leader(zhandle_t *zh, int type,
                              int state, const char *path,void *watcherCtx) {
     leader_election(); // re-run leader election
@@ -163,7 +169,10 @@ void start_mapper(string file_chunk){
     }
   }
   LOG(INFO) << worker_hostname << ".StartMapper(" << file_chunk << ") => " << output_file; 
-
+  string __job_data = framework->getData()->forPath("/jobdata");
+  /*if 
+      framework->setData()->forPath("/jobdata", __job_data.c_str());
+      job_status = __job_status;*/
 }
 
 
@@ -275,7 +284,7 @@ void start_leader(){
       for(int i = 0; i < num_chunk; i++){
         mapper_thread[i].join();
       }
-      string __job_status = "mapped";
+      __job_status = "mapped";
       framework->setData()->forPath("/jobstatus", __job_status.c_str());
       job_status = __job_status;
     }
@@ -302,8 +311,8 @@ void leader_election(){
   // try to create parent directory /master and node
   char cstr_hostname[HOSTNAME_MAX_LEN];
   if(gethostname(cstr_hostname, HOSTNAME_MAX_LEN) != 0){
-    LOG(INFO) << << "Error: Cannot get hostname";
-    return 0;
+    LOG(INFO) << "Error: Cannot get hostname";
+    return;
   }
   string hostname = string(cstr_hostname);
   framework->create()->forPath("/master", (char *) "master-nodes");
